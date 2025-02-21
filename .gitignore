@@ -1,0 +1,6 @@
+.turbo
+.svelte-kit
+node_modules/
+pocketbase/
+build/
+.env.local
