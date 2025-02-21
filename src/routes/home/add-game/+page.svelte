@@ -30,10 +30,10 @@
 	async function fetchExistingData() {
 		try {
 			const records = await pb.collection('games').getFullList();
-			existingPilots = [...new Set(records.map(record => record.pilot))]
+			existingPilots = [...new Set(records.map((record) => record.pilot))]
 				.filter(Boolean)
 				.sort((a, b) => a.localeCompare(b));
-			existingDecks = [...new Set(records.map(record => record.deck))]
+			existingDecks = [...new Set(records.map((record) => record.deck))]
 				.filter(Boolean)
 				.sort((a, b) => a.localeCompare(b));
 		} catch (err) {
@@ -62,6 +62,9 @@
 	async function handleSubmit(): Promise<void> {
 		try {
 			const gameId = generateId();
+
+			// update the hours to 12 so that we avoid conversion between UTC and local timezone
+			gameDate.setHours(12);
 			const formattedDate = gameDate.toISOString().split('T')[0];
 
 			for await (let player of players) {
@@ -99,7 +102,8 @@
 
 	{#if error}
 		<Alert color="red" dismissable bind:open={showError}>
-			<span class="font-medium">Error!</span> {error}
+			<span class="font-medium">Error!</span>
+			{error}
 		</Alert>
 	{/if}
 
@@ -109,10 +113,7 @@
 				<label for="game-date" class="label">
 					<span class="label-text">Game Date</span>
 				</label>
-				<Datepicker
-					bind:value={gameDate}
-					required
-				/>
+				<Datepicker bind:value={gameDate} required />
 			</div>
 
 			<div class="space-y-4">
@@ -183,14 +184,14 @@
 							bind:value={winner}
 							required
 						>
-						{#each players as player}
-							{#if player.pilot}
-								<option value={player.pilot}>
-									{player.pilot}
-								</option>
-							{/if}
-						{/each}
-						<option value="draw">Draw</option>
+							{#each players as player}
+								{#if player.pilot}
+									<option value={player.pilot}>
+										{player.pilot}
+									</option>
+								{/if}
+							{/each}
+							<option value="draw">Draw</option>
 						</select>
 					</div>
 				</div>
