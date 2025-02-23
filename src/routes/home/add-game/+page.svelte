@@ -5,7 +5,6 @@
   import { type DateValue, getLocalTimeZone } from '@internationalized/date';
   import { onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
-  import Label from '$lib/components/ui/label/label.svelte';
   import Input from '$lib/components/ui/input/input.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Select from '$lib/components/ui/select/index.js';
@@ -75,7 +74,7 @@
 
       for await (let player of players) {
         let data = {
-          date: formattedDate.split("T")[0],
+          date: formattedDate.split('T')[0],
           game_id: gameId,
           pilot: player.pilot,
           deck: player.deck,
