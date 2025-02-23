@@ -106,15 +106,6 @@
     <form onsubmit={handleSubmit} class="space-y-6">
       <Card.Root class="mx-auto w-full max-w-2xl">
         <Card.Header>
-          <Card.Title>Game Date</Card.Title>
-        </Card.Header>
-        <Card.Content>
-          <DatePicker bind:value={gameDate} />
-        </Card.Content>
-      </Card.Root>
-
-      <Card.Root class="mx-auto w-full max-w-2xl">
-        <Card.Header>
           <Card.Title>Players</Card.Title>
         </Card.Header>
         <Card.Content>
@@ -128,8 +119,8 @@
             <Table.Body>
               {#each players as player, i}
                 <Table.Row>
-                  <Table.Cell
-                    ><Input
+                  <Table.Cell>
+                    <Input
                       id="pilot-{i}"
                       type="text"
                       placeholder={`Player ${i + 1}`}
@@ -167,24 +158,27 @@
 
       <Card.Root class="mx-auto w-full max-w-2xl">
         <Card.Header>
-          <Card.Title>Result</Card.Title>
+          <Card.Title>Session Info</Card.Title>
         </Card.Header>
         <Card.Content>
-          <Select.Root type="single" name="winner-select" bind:value={winner}>
-            <Select.Trigger class="w-[180px]">
-              {winnerSelectContent}
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Group>
-                {#each players as player}
-                  {#if player.pilot}
-                    <Select.Item value={player.pilot} label={player.pilot} />
-                  {/if}
-                {/each}
-                <Select.Item value="draw" label="Draw" />
-              </Select.Group>
-            </Select.Content>
-          </Select.Root>
+          <div class="flex justify-between flex-wrap gap-2">
+            <DatePicker bind:value={gameDate} />
+            <Select.Root type="single" name="winner-select" bind:value={winner}>
+              <Select.Trigger class="w-[280px]">
+                {winnerSelectContent}
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Group>
+                  {#each players as player}
+                    {#if player.pilot}
+                      <Select.Item value={player.pilot} label={player.pilot} />
+                    {/if}
+                  {/each}
+                  <Select.Item value="draw" label="Draw" />
+                </Select.Group>
+              </Select.Content>
+            </Select.Root>
+          </div>
         </Card.Content>
       </Card.Root>
 
