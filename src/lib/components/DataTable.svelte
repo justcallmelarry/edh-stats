@@ -77,27 +77,29 @@
       </Table.Body>
     </Table.Root>
   </div>
-  <div class="flex items-center justify-end space-x-2 py-4">
+  <div class="flex items-center justify-between items-center space-x-2 py-4">
     <div>
       <small class="text-sm text-muted-foreground"
         >Page {pagination.pageIndex + 1} of {table.getPageCount()}</small
       >
     </div>
-    <Button
-      class="py-2"
-      size="sm"
-      onclick={() => table.previousPage()}
-      disabled={!table.getCanPreviousPage()}
-    >
-      <ChevronLeft />
-    </Button>
-    <Button
-      class="py-2"
-      size="sm"
-      onclick={() => table.nextPage()}
-      disabled={!table.getCanNextPage()}
-    >
-      <ChevronRight />
-    </Button>
+    <div>
+      <Button
+        class="py-2"
+        size="sm"
+        onclick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        <ChevronLeft />
+      </Button>
+      <Button
+        class="py-2"
+        size="sm"
+        onclick={() => table.nextPage()}
+        disabled={!table.getCanNextPage()}
+      >
+        <ChevronRight />
+      </Button>
+    </div>
   </div>
 </div>
