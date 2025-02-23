@@ -1,33 +1,34 @@
 <script>
-	import { pb } from '$lib/pocketbase';
-	import { onMount, setContext } from 'svelte';
-	import { writable } from 'svelte/store';
-	import '../app.css';
-	import { themeChange } from 'theme-change';
+  import { pb } from '$lib/pocketbase';
+  import { onMount, setContext } from 'svelte';
+  import { writable } from 'svelte/store';
+  import '../app.css';
+  import { ModeWatcher } from 'mode-watcher';
+  import { Toaster } from '$lib/components/ui/sonner/index.js';
 
-	const token = writable(pb.authStore.token);
-	const user = writable(pb.authStore.model);
+  let { children } = $props();
 
-	onMount(() => {
-		themeChange(false);
+  const token = writable(pb.authStore.token);
+  const user = writable(pb.authStore.record);
 
-		const unsubscribe = pb.authStore.onChange((newToken, model) => {
-			console.log(`### [/+layout.svelte:onChange]:`, { model, newToken });
-			token.set(newToken);
-			user.set(model);
-			if (model) {
-				localStorage.setItem('hasSignedIn', 'true');
-			}
-		}, true);
-		return () => {
-			unsubscribe();
-		};
-	});
+  onMount(() => {
+    const unsubscribe = pb.authStore.onChange((newToken, model) => {
+      console.log(`### [/+layout.svelte:onChange]:`, { model, newToken });
+      token.set(newToken);
+      user.set(model);
+      if (model) {
+        localStorage.setItem('hasSignedIn', 'true');
+      }
+    }, true);
+    return () => {
+      unsubscribe();
+    };
+  });
 
-	setContext('token', token);
-	setContext('user', user);
-	export const prerender = true;
+  setContext('token', token);
+  setContext('user', user);
 </script>
 
-<slot />
-
+<Toaster richColors />
+<ModeWatcher />
+{@render children?.()}

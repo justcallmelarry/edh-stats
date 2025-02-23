@@ -1,83 +1,77 @@
-<script>
-	import { goto } from '$app/navigation';
-	import { pb } from '$lib/pocketbase';
+<script lang="ts">
+  import { goto } from '$app/navigation';
+  import { pb } from '$lib/pocketbase';
+  import { Button } from '$lib/components/ui/button/index.js';
+  import * as Card from '$lib/components/ui/card/index.js';
+  import { Input } from '$lib/components/ui/input/index.js';
+  import { Label } from '$lib/components/ui/label/index.js';
+  import { toast } from 'svelte-sonner';
+  import LoaderCircle from 'lucide-svelte/icons/loader-circle';
 
-	let error = '';
-	let loading = false;
+  let error = '';
+  let loading = false;
 
-	let email = '';
-	let password = '';
+  let email = '';
+  let password = '';
 
-	async function onSubmit() {
-		if (!email || !password) {
-			error = 'Please fill out all fields.';
-			return;
-		}
-		loading = true;
-		try {
-			const authResult = await pb.collection('users').authWithPassword(email, password);
-			console.log('### [Authenticated user]', authResult);
-			await goto('/home');
-		} catch (err) {
-			error = /** @type {Error} */ (err).message;
-		}
-		loading = false;
-	}
+  async function onSubmit() {
+    if (!email || !password) {
+      error = 'Please fill out all fields.';
+      return;
+    }
+    loading = true;
+    try {
+      const authResult = await pb.collection('users').authWithPassword(email, password);
+      console.log('### [Authenticated user]', authResult);
+      error = '';
+      await goto('/home');
+    } catch (err) {
+      error = (err as Error).message;
+    }
+    loading = false;
+    if (error !== '') {
+      toast.error(error);
+    }
+  }
 </script>
 
-<div class="flex min-h-screen w-full items-center justify-center">
-	<div class="flex w-full flex-col items-center gap-8 p-4 lg:max-w-screen-md lg:flex-row">
-		<div class="card bg-base-300 w-full max-w-sm shadow-2xl">
-			<form on:submit|preventDefault={onSubmit} class="card-body">
-				<h1 class="card-title">Sign in to your account</h1>
-				<div class="form-control">
-					<label class="label" for="email">
-						<span class="label-text">Email</span>
-					</label>
-					<input
-						bind:value={email}
-						id="email"
-						type="email"
-						placeholder="email"
-						class="input input-bordered"
-						required
-					/>
-				</div>
-				<div class="form-control">
-					<label class="label" for="password">
-						<span class="label-text">Password</span>
-					</label>
-					<input
-						bind:value={password}
-						id="password"
-						type="password"
-						placeholder="password"
-						class="input input-bordered"
-						required
-					/>
-					<!-- <label class="label" for="forgot-password">
-						<a id="forgot-password" class="link-hover link label-text-alt" href="/reset-password"
-							>Forgot password?</a
-						>
-					</label> -->
-				</div>
-				<div class="form-control mt-6">
-					<button class="btn btn-primary">
-						{#if loading}
-							<div class="loading loading-spinner"></div>
-						{:else}
-							Sign in
-						{/if}
-					</button>
-					{#if error}
-						<p class="text-error text-center pt-4">{error}</p>
-					{/if}
-				</div>
-			</form>
-		</div>
-		<div class="text-center font-semibold sm:text-lg lg:text-right">
-			<p>Forgot your password?</p>
-			<a href="/reset-password" class="link-hover link link-secondary">Click here to reset.</a>
-		</div>
-	</div>
+<div class="h-screen flex items-center justify-center">
+  <Card.Root class="mx-auto max-w-sm">
+    <Card.Header>
+      <Card.Title class="text-2xl">Login</Card.Title>
+      <Card.Description>Enter your email below to login to your account</Card.Description>
+    </Card.Header>
+    <Card.Content>
+      <form on:submit|preventDefault={onSubmit} class="card-body">
+        <div class="grid gap-4">
+          <div class="grid gap-2">
+            <Label for="email">Email</Label>
+            <Input
+              bind:value={email}
+              id="email"
+              type="email"
+              placeholder="email@example.com"
+              required
+            />
+          </div>
+          <div class="grid gap-2">
+            <div class="flex items-center">
+              <Label for="password">Password</Label>
+            </div>
+            <Input bind:value={password} id="password" type="password" required />
+          </div>
+          <Button type="submit" class="w-full" disabled={loading}>
+            {#if loading}
+              <LoaderCircle class="animate-spin" />
+            {:else}
+              Login
+            {/if}
+          </Button>
+          <div class="mt-4 text-center text-sm">
+            <a href="/reset-password" class="underline">Forgot your password?</a>
+          </div>
+        </div>
+      </form>
+    </Card.Content>
+  </Card.Root>
 </div>
