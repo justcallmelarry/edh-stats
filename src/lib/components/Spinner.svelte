@@ -21,7 +21,6 @@
     top: 0;
     bottom: 0;
     color: #64748b;
-    background: rgb(255 255 255 / 0.9);
   }
 
   /* spinner from https://projects.lukehaas.me/css-loaders/ */
