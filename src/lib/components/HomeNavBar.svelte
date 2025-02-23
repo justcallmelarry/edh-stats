@@ -2,15 +2,18 @@
   import Button from './ui/button/button.svelte';
   import LightSwitch from './LightSwitch.svelte';
   import Banana from 'lucide-svelte/icons/banana';
+  import Plus from 'lucide-svelte/icons/plus';
+  import House from 'lucide-svelte/icons/house';
 </script>
 
 <div class="flex justify-between bg-secondary p-4">
   <div class="flex">
-    <span id="logo">
+    <span>
       <Banana size={32} />
     </span>
-    <Button variant="link" href="/home">Home</Button>
-    <Button variant="link" href="/home/add-game">Add Game</Button>
+    <div class="w-8"></div>
+    <Button variant="link" class="text-foreground" href="/home"><House /> Home</Button>
+    <Button variant="link" class="text-foreground" href="/home/add-game"><Plus />Add Game</Button>
   </div>
   <div class="flex">
     <LightSwitch />
