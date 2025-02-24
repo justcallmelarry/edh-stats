@@ -142,7 +142,7 @@
                     {#if players.length > 3}
                       <button
                         type="button"
-                        class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-200 hover:bg-red-300"
+                        class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 hover:bg-red-700"
                         onclick={() => removePlayer(i)}
                       >
                         <X size={12} />
