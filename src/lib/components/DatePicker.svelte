@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CalendarIcon from 'lucide-svelte/icons/calendar';
+  import { CalendarIcon } from 'lucide-svelte';
   import { type DateValue, DateFormatter, getLocalTimeZone } from '@internationalized/date';
   import { cn } from '$lib/utils.js';
   import { Button } from '$lib/components/ui/button/index.js';

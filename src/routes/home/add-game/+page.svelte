@@ -9,7 +9,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Select from '$lib/components/ui/select/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import X from 'lucide-svelte/icons/x';
+  import { X } from 'lucide-svelte';
 
   interface Player {
     pilot: string;

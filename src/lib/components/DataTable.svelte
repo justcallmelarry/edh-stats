@@ -8,8 +8,7 @@
   import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
   import Button from './ui/button/button.svelte';
-  import ChevronRight from 'lucide-svelte/icons/chevron-right';
-  import ChevronLeft from 'lucide-svelte/icons/chevron-left';
+  import { ChevronLeft, ChevronRight } from 'lucide-svelte';
 
   type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];

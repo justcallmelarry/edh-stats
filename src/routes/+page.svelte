@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition';
   import { goto } from '$app/navigation';
   import Button from '$lib/components/ui/button/button.svelte';
-  import Check from 'lucide-svelte/icons/check';
+  import { Check } from 'lucide-svelte';
 
   let visible = false;
 

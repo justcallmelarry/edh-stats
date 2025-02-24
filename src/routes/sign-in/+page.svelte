@@ -6,7 +6,7 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import { toast } from 'svelte-sonner';
-  import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+  import { LoaderCircle } from 'lucide-svelte';
 
   let error = '';
   let loading = false;
