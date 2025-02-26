@@ -9,7 +9,8 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Select from '$lib/components/ui/select/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import { X } from 'lucide-svelte';
+  import { X, User, Crown } from 'lucide-svelte';
+  import IconComboBox from '$lib/components/IconComboBox.svelte';
 
   interface Player {
     pilot: string;
@@ -58,6 +59,10 @@
     if (players.length > 3) {
       players = players.filter((_, i) => i !== index);
     }
+  }
+
+  function playerChange(value: string) {
+    console.log(value)
   }
 
   async function handleSubmit(): Promise<void> {
@@ -120,34 +125,40 @@
               {#each players as player, i}
                 <Table.Row>
                   <Table.Cell>
-                    <Input
-                      id="pilot-{i}"
-                      type="text"
-                      placeholder={`Player ${i + 1}`}
-                      bind:value={player.pilot}
-                      class="input input-bordered w-full"
-                      list="pilot-options"
-                      required
-                    />
+                    <div class="flex gap-1">
+                      <IconComboBox icon={User} list={existingPilots} bind:value={player.pilot} />
+                      <Input
+                        id="pilot-{i}"
+                        type="text"
+                        placeholder={`Player ${i + 1}`}
+                        bind:value={player.pilot}
+                        class="input input-bordered w-full rounded-r-lg"
+                        list="pilot-options"
+                        required
+                      />
+                    </div>
                   </Table.Cell>
                   <Table.Cell class="relative">
-                    <Input
-                      id="deck-{i}"
-                      type="text"
-                      bind:value={player.deck}
-                      class="input input-bordered w-[98%]"
-                      list="deck-options"
-                      required
-                    />
-                    {#if players.length > 3}
-                      <button
-                        type="button"
-                        class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 hover:bg-red-700"
-                        onclick={() => removePlayer(i)}
-                      >
-                        <X size={12} />
-                      </button>
-                    {/if}
+                    <div class="flex gap-1">
+                      <IconComboBox icon={Crown} list={existingDecks} bind:value={player.deck} />
+                      <Input
+                        id="deck-{i}"
+                        type="text"
+                        bind:value={player.deck}
+                        class="input input-bordered rounded-r-lg"
+                        list="deck-options"
+                        required
+                      />
+                      {#if players.length > 3}
+                        <button
+                          type="button"
+                          class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
+                          onclick={() => removePlayer(i)}
+                        >
+                          <X size={12} />
+                        </button>
+                      {/if}
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               {/each}

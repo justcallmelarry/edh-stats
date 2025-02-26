@@ -1,8 +1,7 @@
 <script lang="ts">
   import Button from './ui/button/button.svelte';
   import LightSwitch from './LightSwitch.svelte';
-  import Plus from 'lucide-svelte/icons/plus';
-  import { Banana, House } from 'lucide-svelte';
+  import { Banana, House, Plus } from 'lucide-svelte';
 </script>
 
 <div class="flex justify-between bg-secondary p-4">
