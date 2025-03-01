@@ -22,7 +22,6 @@
     loading = true;
     try {
       const authResult = await pb.collection('users').authWithPassword(email, password);
-      console.log('### [Authenticated user]', authResult);
       error = '';
       await goto('/home');
     } catch (err) {

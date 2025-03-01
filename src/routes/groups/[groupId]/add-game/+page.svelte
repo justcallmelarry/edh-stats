@@ -11,6 +11,7 @@
   import * as Table from '$lib/components/ui/table/index.js';
   import { X, User, Layers } from 'lucide-svelte';
   import IconComboBox from '$lib/components/IconComboBox.svelte';
+  import { page } from '$app/state';
 
   interface Player {
     pilot: string;
@@ -26,18 +27,32 @@
   let gameDate: DateValue | undefined = $state(undefined);
   let winner: string = $state('draw');
 
-  let existingPilots: string[] = $state([]);
-  let existingDecks: string[] = $state([]);
+  let existingPilots: Array<{ id: string; name: string }> = $state([]);
+  let existingDecks: Array<{ id: string; name: string }> = $state([]);
 
   async function fetchExistingData() {
     try {
-      const records = await pb.collection('games').getFullList();
-      existingPilots = [...new Set(records.map((record) => record.pilot))]
-        .filter(Boolean)
-        .sort((a, b) => a.localeCompare(b));
-      existingDecks = [...new Set(records.map((record) => record.deck))]
-        .filter(Boolean)
-        .sort((a, b) => a.localeCompare(b));
+      const pilots = await pb.collection('pilots').getFullList({
+        filter: `playgroup = "${page.params.groupId}"`,
+      });
+
+      existingPilots = [...new Set(pilots.map(record => ({
+        id: record.pilot,
+        name: record.name || ''
+      })))]
+      .filter(pilot => pilot.name)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+      const decks = await pb.collection('decks').getFullList({
+        filter: `playgroup = "${page.params.groupId}"`,
+      });
+
+      existingDecks = [...new Set(decks.map((record) => ({
+        id: record.id,
+        name: record.name
+      })))]
+        .filter(deck => deck.name)
+        .sort((a, b) => a.name.localeCompare(b.name));
     } catch (err) {
       console.error('Error fetching existing data:', err);
     }
@@ -61,10 +76,6 @@
     }
   }
 
-  function playerChange(value: string) {
-    console.log(value)
-  }
-
   async function handleSubmit(): Promise<void> {
     try {
       const gameId = generateId();
@@ -77,17 +88,46 @@
       localDate.setHours(12);
       const formattedDate = gameDate ? localDate.toISOString() : new Date().toISOString();
 
+      // Process each player's data
       for await (let player of players) {
+        // Check if pilot exists by name, create if not
+        let pilotRecord = await pb.collection('pilots').getFirstListItem(`name = "${player.pilot}" && playgroup = "${page.params.groupId}"`).catch(() => null);
+
+        let pilotId;
+        if (!pilotRecord) {
+          pilotRecord = await pb.collection('pilots').create({
+            name: player.pilot,
+            pilot: generateId(), // Generate a new pilot ID
+            playgroup: page.params.groupId
+          });
+        }
+        pilotId = pilotRecord?.id;
+
+        // Check if deck exists by name, create if not
+        let deckRecord = await pb.collection('decks').getFirstListItem(`name = "${player.deck}" && playgroup = "${page.params.groupId}"`).catch(() => null);
+
+        let deckId;
+        if (!deckRecord) {
+          deckRecord = await pb.collection('decks').create({
+            name: player.deck,
+            playgroup: page.params.groupId
+          });
+        }
+        deckId = deckRecord?.id;
+
+        // Create game record with relations
         let data = {
           date: formattedDate.split('T')[0],
           game_id: gameId,
-          pilot: player.pilot,
-          deck: player.deck,
-          winner: winner !== 'draw' && winner === player.pilot
+          pilot: pilotId,
+          deck: deckId,
+          winner: winner !== 'draw' && winner === player.pilot,
+          playgroup: page.params.groupId
         };
         await pb.collection('games').create(data);
       }
 
+      // Reset form
       players = [
         { pilot: '', deck: '' },
         { pilot: '', deck: '' },
@@ -96,6 +136,9 @@
       ];
       winner = 'draw';
       toast.success('Game added!');
+
+      // Refresh the existing data lists
+      await fetchExistingData();
     } catch (err: unknown) {
       toast.error((err as Error).message);
     }
@@ -133,7 +176,6 @@
                         placeholder={`Player ${i + 1}`}
                         bind:value={player.pilot}
                         class="input input-bordered w-full rounded-r-lg"
-                        list="pilot-options"
                         required
                       />
                     </div>
@@ -146,7 +188,6 @@
                         type="text"
                         bind:value={player.deck}
                         class="input input-bordered rounded-r-lg"
-                        list="deck-options"
                         required
                       />
                       {#if players.length > 3}
@@ -200,14 +241,3 @@
     </form>
   </div>
 </div>
-
-<datalist id="pilot-options">
-  {#each existingPilots as pilot}
-    <option value={pilot}>{pilot}</option>
-  {/each}
-</datalist>
-<datalist id="deck-options">
-  {#each existingDecks as deck}
-    <option value={deck}>{deck}</option>
-  {/each}
-</datalist>

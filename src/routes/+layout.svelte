@@ -13,7 +13,6 @@
 
   onMount(() => {
     const unsubscribe = pb.authStore.onChange((newToken, model) => {
-      console.log(`### [/+layout.svelte:onChange]:`, { model, newToken });
       token.set(newToken);
       user.set(model);
       if (model) {
@@ -27,6 +26,8 @@
 
   setContext('token', token);
   setContext('user', user);
+
+  export const trailingSlash = 'always';
 </script>
 
 <Toaster richColors />

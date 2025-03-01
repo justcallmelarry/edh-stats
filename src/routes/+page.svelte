@@ -15,7 +15,7 @@
     let route = '/sign-in';
     const hasSignedIn = localStorage.getItem('hasSignedIn') === 'true';
     if (hasSignedIn) {
-      route = '/home';
+      route = '/groups';
     }
     await goto(route);
   }
@@ -52,7 +52,7 @@
         </ul>
 
         <div class="space-x-4">
-          <Button onclick={onClick}>View Stats</Button>
+          <Button onclick={onClick}>Go to playgroups</Button>
         </div>
       </div>
     {/if}
