@@ -11,6 +11,8 @@
     name: string;
     members: string[];
     owner: string;
+    pilots: number;
+    latestGameDate: string | null;
   }
 
   let playgroups: Playgroup[] = [];
@@ -20,11 +22,53 @@
       const currentUser = pb.authStore.model;
       if (!currentUser) return;
 
+      // Get base playgroups data
       const records = await pb.collection('playgroups').getList();
+      const basePlaygroups = records.items as unknown as Playgroup[];
 
-      playgroups = records.items as unknown as Playgroup[];
+      // Enrich each playgroup with pilots count and latest game date
+      const enrichedPlaygroups = await Promise.all(
+        basePlaygroups.map(async (playgroup) => {
+          try {
+            // Get pilots count
+            const pilotsResult = await pb.collection('pilots').getList(1, 1, {
+              filter: `playgroup = "${playgroup.id}"`,
+              $cancelKey: `pilots-${playgroup.id}`
+            });
+
+            // Get latest game
+            const gamesResult = await pb.collection('games').getList(1, 1, {
+              filter: `playgroup = "${playgroup.id}"`,
+              sort: '-date',
+              $cancelKey: `games-${playgroup.id}`
+            });
+
+            return {
+              ...playgroup,
+              pilots: pilotsResult?.totalItems ?? 0,
+              latestGameDate: gamesResult?.items[0]?.date ?? null
+            };
+          } catch (err) {
+            console.error(`Error enriching playgroup ${playgroup.id}:`, err);
+            // Return playgroup with default values if enrichment fails
+            return {
+              ...playgroup,
+              pilots: 0,
+              latestGameDate: null
+            };
+          }
+        })
+      );
+
+      // Sort by latest game date
+      playgroups = enrichedPlaygroups.sort((a, b) => {
+        if (!a.latestGameDate) return 1;
+        if (!b.latestGameDate) return -1;
+        return new Date(b.latestGameDate).getTime() - new Date(a.latestGameDate).getTime();
+      });
     } catch (error) {
       console.error('Error fetching playgroups:', error);
+      playgroups = [];
     }
   });
 </script>
@@ -73,11 +117,11 @@
                 <div class="flex items-center justify-between w-full">
                   <div class="flex items-center text-muted-foreground">
                     <Users class="h-4 w-4" />
-                    <span class="ml-1">{playgroup.members.length}</span>
+                    <span class="ml-1">{playgroup.pilots || 0}</span>
                   </div>
                   <div class="flex items-center text-muted-foreground text-sm">
                     <Calendar class="h-4 w-4" />
-                    <span class="ml-1">{new Date().toISOString().split('T')[0]}</span>
+                    <span class="ml-1">{playgroup.latestGameDate ? new Date(playgroup.latestGameDate).toISOString().split('T')[0] : 'No games yet'}</span>
                   </div>
                 </div>
               </div>
