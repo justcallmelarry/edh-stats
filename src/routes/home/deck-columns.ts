@@ -9,6 +9,7 @@ export type DeckRanking = {
  games: number;
  wins: number;
  winRatio: number;
+ score: number
 };
 
 
@@ -64,6 +65,21 @@ export const deckRankingColumns: ColumnDef<DeckRanking>[] = [
   cell: ({ row }) => {
       const percentHeaderSnippet = createRawSnippet(() => ({
         render: () => `<div class="text-center">${(Number(row.getValue("winRatio")) * 100).toFixed(1)}%</div>`,
+      }));
+      return renderSnippet(percentHeaderSnippet, "");
+    },
+ },
+ {
+  accessorKey: "score",
+  header: () => {
+      const centerHeaderSnippet = createRawSnippet(() => ({
+        render: () => `<div class="text-center">Ranking</div>`,
+      }));
+      return renderSnippet(centerHeaderSnippet, "");
+    },
+  cell: ({ row }) => {
+      const percentHeaderSnippet = createRawSnippet(() => ({
+        render: () => `<div class="text-center">${(Number(row.getValue("score"))).toFixed(3)}</div>`,
       }));
       return renderSnippet(percentHeaderSnippet, "");
     },

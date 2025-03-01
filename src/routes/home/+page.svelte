@@ -29,6 +29,7 @@
     wins: number;
     games: number;
     winRatio: number;
+    score: number;
   }
 
   interface DeckRanking {
@@ -36,6 +37,7 @@
     wins: number;
     games: number;
     winRatio: number;
+    score: number;
   }
 
   let gameRows: GameRow[] = [];
@@ -82,14 +84,15 @@
         pilot,
         wins: stats.wins,
         games: stats.totalGames.size,
-        winRatio: stats.wins / stats.totalGames.size
+        winRatio: stats.wins / stats.totalGames.size,
+        // @ts-ignore
+        score: stats.totalGames.size * (stats.wins / stats.totalGames.size).toFixed(3)
       }))
       .sort((a, b) => {
-        // First compare by winRatio
-        if (b.winRatio !== a.winRatio) {
-          return b.winRatio - a.winRatio;
+        if (b.score !== a.score) {
+          return b.score - a.score;
         }
-        // If winRatio is equal, compare by number of games
+
         return b.games - a.games;
       });
 
@@ -98,14 +101,15 @@
         deck,
         wins: stats.wins,
         games: stats.totalGames.size,
-        winRatio: stats.wins / stats.totalGames.size
+        winRatio: stats.wins / stats.totalGames.size,
+        // @ts-ignore
+        score: stats.totalGames.size * (stats.wins / stats.totalGames.size).toFixed(3)
       }))
       .sort((a, b) => {
-        // First compare by winRatio
-        if (b.winRatio !== a.winRatio) {
-          return b.winRatio - a.winRatio;
+        if (b.score !== a.score) {
+          return b.score - a.score;
         }
-        // If winRatio is equal, compare by number of games
+
         return b.games - a.games;
       });
   }

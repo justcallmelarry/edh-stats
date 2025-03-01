@@ -9,7 +9,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Select from '$lib/components/ui/select/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import { X, User, Crown } from 'lucide-svelte';
+  import { X, User, Layers } from 'lucide-svelte';
   import IconComboBox from '$lib/components/IconComboBox.svelte';
 
   interface Player {
@@ -140,7 +140,7 @@
                   </Table.Cell>
                   <Table.Cell class="relative">
                     <div class="flex gap-1">
-                      <IconComboBox icon={Crown} list={existingDecks} bind:value={player.deck} />
+                      <IconComboBox icon={Layers} list={existingDecks} bind:value={player.deck} />
                       <Input
                         id="deck-{i}"
                         type="text"
