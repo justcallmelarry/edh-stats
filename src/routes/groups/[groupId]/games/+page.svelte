@@ -1,0 +1,120 @@
+<script lang="ts">
+  import * as Card from '$lib/components/ui/card/index.js';
+  import * as Table from '$lib/components/ui/table/index.js';
+  import { User, Layers, Trophy } from 'lucide-svelte';
+  import { pb } from '$lib/pocketbase';
+  import { page } from '$app/state';
+  import { onMount } from 'svelte';
+  import Spinner from '$lib/components/Spinner.svelte';
+
+  interface GameRow {
+    id: string;
+    game_id: string;
+    date: string;
+    pilot: string;
+    deck: string;
+    winner: boolean;
+    expand: {
+      pilot: { name: string };
+      deck: { name: string };
+    };
+  }
+
+  interface GroupedGame {
+    date: string;
+    players: Array<{
+      pilot: string;
+      deck: string;
+      isWinner: boolean;
+    }>;
+  }
+
+  let games: GroupedGame[] = $state([]);
+  let isLoading = $state(false);
+  const GAMES_PER_PAGE = 300;
+
+  async function fetchGames() {
+    isLoading = true;
+    try {
+      const resultList = await pb.collection('games').getList(1, GAMES_PER_PAGE, {
+        filter: `playgroup = "${page.params.groupId}"`,
+        expand: 'pilot,deck',
+        sort: '-date,-created',
+      });
+
+      // Group records by game_id
+      const gameGroups = resultList.items.reduce<Record<string, GroupedGame>>((acc, record) => {
+        const gameRecord = record as unknown as GameRow;
+        if (!acc[gameRecord.game_id]) {
+          acc[gameRecord.game_id] = {
+            date: gameRecord.date,
+            players: [],
+          };
+        }
+
+        acc[gameRecord.game_id].players.push({
+          pilot: gameRecord.expand.pilot.name,
+          deck: gameRecord.expand.deck.name,
+          isWinner: gameRecord.winner,
+        });
+
+        return acc;
+      }, {});
+
+      games = Object.values(gameGroups);
+    } catch (err) {
+      console.error('Error fetching games:', err);
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  onMount(() => {
+    fetchGames();
+  });
+</script>
+
+{#each games as game}
+  <Card.Root class="mx-auto w-full max-w-2xl mb-4">
+    <Card.Header>
+      <Card.Title>Game from {game.date}</Card.Title>
+    </Card.Header>
+    <Card.Content>
+      <Table.Root>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Pilot</Table.Head>
+            <Table.Head>Deck</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {#each game.players as player}
+            <Table.Row>
+              <Table.Cell>
+                <div class="flex items-center gap-2">
+                  <User class="h-4 w-4" />
+                  {player.pilot}
+                </div>
+              </Table.Cell>
+              <Table.Cell>
+                <div class="flex items-center gap-2">
+                  <Layers class="h-4 w-4" />
+                  {player.deck}
+                  {#if player.isWinner}
+                    <Trophy class="h-4 w-4 text-yellow-500" />
+                  {/if}
+                </div>
+              </Table.Cell>
+            </Table.Row>
+          {/each}
+        </Table.Body>
+      </Table.Root>
+    </Card.Content>
+  </Card.Root>
+{/each}
+
+{#if isLoading}
+  <div class="flex justify-center">
+    <Spinner />
+  </div>
+{/if}

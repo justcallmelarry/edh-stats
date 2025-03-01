@@ -3,15 +3,19 @@
   import { CircleHelp, type Icon as IconType } from 'lucide-svelte';
   import { buttonVariants } from '$lib/components/ui/button/index.js';
   import * as Command from '$lib/components/ui/command/index.js';
-  import { tick } from 'svelte';
 
-  type SelectionComboboxProps<TData, TValue> = {
+  type ListItem = {
+    id: string;
+    name: string;
+  };
+
+  type IconComboboxProps<TData, TValue> = {
     icon: typeof IconType;
-    list: string[];
+    list: ListItem[];
     value: string;
   };
 
-  let { value = $bindable(), icon, list }: SelectionComboboxProps<TData, TValue> = $props();
+  let { value = $bindable(), icon, list }: IconComboboxProps<TData, TValue> = $props();
 
   let open = $state(false);
 
@@ -31,16 +35,18 @@
   {/if}
   <Popover.Content class="w-[200px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Search framework..." class="h-9" />
+      <Command.Input placeholder="Search items..." class="h-9" />
       <Command.List>
-        <Command.Empty>No framework found.</Command.Empty>
+        <Command.Empty>No such item.</Command.Empty>
         <Command.Group>
           {#each list as entry}
             <Command.Item
               onSelect={() => {
-                value = entry;
+                value = entry.name;
                 closeAndFocusTrigger();
-              }}>{entry}</Command.Item
+              }}>
+              {entry.name}
+              </Command.Item
             >
           {/each}
         </Command.Group>
