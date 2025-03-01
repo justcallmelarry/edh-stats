@@ -124,7 +124,7 @@
         <Card.Header>
           <Card.Title>Player Rankings</Card.Title>
         </Card.Header>
-        <Card.Content class="px-2">
+        <Card.Content class="px-2 md:px-6">
           <DataTable data={playerRankings} columns={playerRankingColumns} />
         </Card.Content>
       </Card.Root>
@@ -132,7 +132,7 @@
         <Card.Header>
           <Card.Title>Deck Rankings</Card.Title>
         </Card.Header>
-        <Card.Content class="px-2">
+        <Card.Content class="px-2 md:px-6">
           <DataTable data={deckRankings} columns={deckRankingColumns} />
         </Card.Content>
       </Card.Root>
