@@ -26,8 +26,6 @@
 
   setContext('token', token);
   setContext('user', user);
-
-  export const trailingSlash = 'always';
 </script>
 
 <Toaster richColors />
