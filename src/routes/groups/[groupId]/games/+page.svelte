@@ -39,7 +39,7 @@
       const resultList = await pb.collection('games').getList(1, GAMES_PER_PAGE, {
         filter: `playgroup = "${page.params.groupId}"`,
         expand: 'pilot,deck',
-        sort: '-date,-created',
+        sort: '-date,-created'
       });
 
       // Group records by game_id
@@ -48,14 +48,14 @@
         if (!acc[gameRecord.game_id]) {
           acc[gameRecord.game_id] = {
             date: gameRecord.date,
-            players: [],
+            players: []
           };
         }
 
         acc[gameRecord.game_id].players.push({
           pilot: gameRecord.expand.pilot.name,
           deck: gameRecord.expand.deck.name,
-          isWinner: gameRecord.winner,
+          isWinner: gameRecord.winner
         });
 
         return acc;
@@ -74,45 +74,46 @@
   });
 </script>
 
-{#each games as game}
-  <Card.Root class="mx-auto w-full max-w-2xl mb-4">
-    <Card.Header>
-      <Card.Title>Game from {game.date}</Card.Title>
-    </Card.Header>
-    <Card.Content>
-      <Table.Root>
-        <Table.Header>
-          <Table.Row>
-            <Table.Head>Pilot</Table.Head>
-            <Table.Head>Deck</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {#each game.players as player}
+<div class="container mx-auto grid w-full grid-cols-1 lg:grid-cols-2 gap-2 px-0">
+  {#each games as game}
+    <Card.Root class="mx-auto w-full max-w-2xl mb-4">
+      <Card.Header>
+        <Card.Title>Game from {game.date}</Card.Title>
+      </Card.Header>
+      <Card.Content>
+        <Table.Root>
+          <Table.Header>
             <Table.Row>
-              <Table.Cell>
-                <div class="flex items-center gap-2">
-                  <User class="h-4 w-4" />
-                  {player.pilot}
-                </div>
-              </Table.Cell>
-              <Table.Cell>
-                <div class="flex items-center gap-2">
-                  <Layers class="h-4 w-4" />
-                  {player.deck}
-                  {#if player.isWinner}
-                    <Trophy class="h-4 w-4 text-yellow-500" />
-                  {/if}
-                </div>
-              </Table.Cell>
+              <Table.Head>Pilot</Table.Head>
+              <Table.Head>Deck</Table.Head>
             </Table.Row>
-          {/each}
-        </Table.Body>
-      </Table.Root>
-    </Card.Content>
-  </Card.Root>
-{/each}
-
+          </Table.Header>
+          <Table.Body>
+            {#each game.players as player}
+              <Table.Row>
+                <Table.Cell>
+                  <div class="flex items-center gap-2">
+                    <User class="h-4 w-4" />
+                    {player.pilot}
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <div class="flex items-center gap-2">
+                    <Layers class="h-4 w-4" />
+                    {player.deck}
+                    {#if player.isWinner}
+                      <Trophy class="h-4 w-4 text-yellow-500" />
+                    {/if}
+                  </div>
+                </Table.Cell>
+              </Table.Row>
+            {/each}
+          </Table.Body>
+        </Table.Root>
+      </Card.Content>
+    </Card.Root>
+  {/each}
+</div>
 {#if isLoading}
   <div class="flex justify-center">
     <Spinner />

@@ -23,7 +23,7 @@
     try {
       const authResult = await pb.collection('users').authWithPassword(email, password);
       error = '';
-      await goto('/home');
+      await goto('/groups');
     } catch (err) {
       error = (err as Error).message;
     }
