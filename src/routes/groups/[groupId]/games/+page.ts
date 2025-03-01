@@ -4,6 +4,6 @@ import { TABS } from '$lib/constants';
 
 export const load = () => {
   return {
-    tab: TABS.RANKINGS
+    tab: TABS.GAMES
   };
 };
