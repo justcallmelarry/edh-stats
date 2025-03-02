@@ -6,7 +6,7 @@
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
   import { Layers } from 'lucide-svelte';
-  import { PieChart } from 'layerchart';
+  import { PieChart, pivotLonger } from 'layerchart';
 
   interface Deck {
     id: string;
@@ -33,6 +33,7 @@
   let isLoading = $state(false);
   let decks: Deck[] = $state([]);
   let deckColors: Record<string, number> = $state({});
+  let pilotName = $state('');
 
   async function fetchData() {
     isLoading = true;
@@ -43,6 +44,9 @@
       });
       const uniqueDecks = new Map();
       result.forEach((record) => {
+        if (!pilotName) {
+          pilotName = record.pilot;
+        }
         const deck = record.expand?.deck;
         if (deck && !uniqueDecks.has(deck.id)) {
           uniqueDecks.set(deck.id, {
@@ -115,7 +119,7 @@
 
 <Card.Root class="mx-auto w-full mb-4">
   <Card.Header>
-    <Card.Title>Pilot Info</Card.Title>
+    <Card.Title>Pilot Info - {pilotName}</Card.Title>
   </Card.Header>
   <Card.Content>
     <h4 class="scroll-m-20 text-sm font-semibold tracking-tight">Color Popularity</h4>
