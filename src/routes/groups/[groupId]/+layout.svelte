@@ -1,43 +1,31 @@
 <script lang="ts">
-  import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { page } from '$app/state';
+  import Button from '$lib/components/ui/button/button.svelte';
+  import type { LayoutProps } from './$types';
+  import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
 
   // Get the active tab from the page data
-  $: activeTab = page.data.tab ?? 'rankings'; // default to rankings if not specified
+  let { children }: LayoutProps = $props();
 
-  // Prevent default tab behavior
-  const onValueChange = () => {
-    // Do nothing - let the link handle navigation
-  };
+  const navigationItems = [
+    { slug: 'rankings', label: 'Rankings', href: `/groups/${page.params.groupId}` },
+    { slug: 'games', label: 'Game History', href: `/groups/${page.params.groupId}/games` },
+    { slug: 'add-game', label: 'Add Game', href: `/groups/${page.params.groupId}/add-game` },
+    { slug: 'pilots', label: 'Pilots', href: `/groups/${page.params.groupId}/pilots` }
+  ];
 </script>
 
-<Tabs.Root value={activeTab} class="w-full" {onValueChange}>
-  <Tabs.List class="grid w-full grid-cols-3 mb-4">
-    <Tabs.Trigger value="rankings">
-      <a
-        href="/groups/{page.params.groupId}"
+<ScrollArea orientation="both" scrollbarXClasses="invisible">
+  <div class="mb-4 flex items-center overflow-y-auto md:pb-0">
+    {#each navigationItems as item}
+      <Button
+        href={item.href}
         class="w-full h-full flex items-center justify-center"
+        variant={page.data.tab === item.slug ? 'outline' : 'ghost'}
       >
-        Rankings
-      </a>
-    </Tabs.Trigger>
-    <Tabs.Trigger value="games">
-      <a
-        href="/groups/{page.params.groupId}/games"
-        class="w-full h-full flex items-center justify-center"
-      >
-        Game History
-      </a>
-    </Tabs.Trigger>
-    <Tabs.Trigger value="add-game">
-      <a
-        href="/groups/{page.params.groupId}/add-game"
-        class="w-full h-full flex items-center justify-center"
-      >
-        Add New Game
-      </a>
-    </Tabs.Trigger>
-  </Tabs.List>
-
-  <slot />
-</Tabs.Root>
+        {item.label}
+      </Button>
+    {/each}
+  </div>
+</ScrollArea>
+{@render children?.()}
