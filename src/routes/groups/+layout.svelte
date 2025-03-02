@@ -5,4 +5,8 @@
 </script>
 
 <HomeNavBar />
-{@render children?.()}
+<div class="container mx-auto p-2 md:p-4">
+  <div class="max-w-4xl mx-auto">
+    {@render children?.()}
+  </div>
+</div>
