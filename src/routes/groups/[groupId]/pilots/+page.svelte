@@ -48,10 +48,10 @@
               <a href={`/groups/${page.params.groupId}/pilots/${pilot.id}`}>
                 <div class="flex justify-between gap-2">
                   <div class="flex items-center gap-2">
-                    <User class="h-4 w-4" />
+                    <div><User size={16} /></div>
                     {pilot.name}
                   </div>
-                  <ChevronRight class="h-4 w-4" />
+                  <div><ChevronRight size={16} /></div>
                 </div>
               </a>
             </Table.Cell>

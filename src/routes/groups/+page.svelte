@@ -84,10 +84,7 @@
 </div>
 <div class="mt-4 flex flex-wrap gap-4 justify-start">
   {#each playgroups as playgroup}
-    <a
-      href="/groups/{playgroup.id}"
-      class="w-[calc(100%)] md:w-[calc(50%-0.5rem)] no-underline"
-    >
+    <a href="/groups/{playgroup.id}" class="w-[calc(100%)] md:w-[calc(50%-0.5rem)] no-underline">
       <Card.Root class="w-full transition-colors hover:bg-muted/50">
         <div class="p-4">
           <div class="flex flex-col gap-1">
@@ -123,11 +120,11 @@
             </div>
             <div class="flex items-center justify-between w-full">
               <div class="flex items-center text-muted-foreground">
-                <Users class="h-4 w-4" />
+                <div><Users size={16} /></div>
                 <span class="ml-1">{playgroup.pilots || 0}</span>
               </div>
               <div class="flex items-center text-muted-foreground text-sm">
-                <Calendar class="h-4 w-4" />
+                <div><Calendar size={16} /></div>
                 <span class="ml-1"
                   >{playgroup.latestGameDate
                     ? new Date(playgroup.latestGameDate).toISOString().split('T')[0]

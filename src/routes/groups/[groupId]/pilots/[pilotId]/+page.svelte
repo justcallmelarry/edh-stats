@@ -161,7 +161,7 @@
             <Table.Cell>
               <div class="flex justify-between gap-2">
                 <div class="flex items-center gap-2">
-                  <Layers class="h-4 w-4" />
+                  <div><Layers size={16} /></div>
                   {deck.name}
                 </div>
               </div>

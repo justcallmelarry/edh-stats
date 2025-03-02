@@ -93,16 +93,16 @@
               <Table.Row>
                 <Table.Cell>
                   <div class="flex items-center gap-2">
-                    <User class="h-4 w-4" />
+                    <div><User size={16} /></div>
                     {player.pilot}
                   </div>
                 </Table.Cell>
                 <Table.Cell>
                   <div class="flex items-center gap-2">
-                    <Layers class="h-4 w-4" />
+                    <div><Layers size={16} /></div>
                     {player.deck}
                     {#if player.isWinner}
-                      <Trophy class="h-4 w-4 text-yellow-500" />
+                      <div><Trophy size={16} class="text-yellow-500" /></div>
                     {/if}
                   </div>
                 </Table.Cell>
