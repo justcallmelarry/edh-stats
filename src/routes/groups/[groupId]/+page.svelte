@@ -136,7 +136,7 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div class="container mx-auto p-4 flex">
+    <div class="container mx-auto px-0 flex">
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-2 w-full">
         <Card.Root class="mx-auto w-full max-w-2xl">
           <Card.Header>
