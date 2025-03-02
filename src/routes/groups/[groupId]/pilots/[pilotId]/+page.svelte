@@ -38,15 +38,15 @@
   async function fetchData() {
     isLoading = true;
     try {
+      const pilot = await pb.collection('pilots').getOne(page.params.pilotId);
+      pilotName = pilot.name;
+
       const result: Array<GameRow> = await pb.collection('games').getFullList({
         filter: `playgroup = "${page.params.groupId}" && pilot = "${page.params.pilotId}"`,
-        expand: 'deck'
+        expand: 'pilot,deck'
       });
       const uniqueDecks = new Map();
       result.forEach((record) => {
-        if (!pilotName) {
-          pilotName = record.pilot;
-        }
         const deck = record.expand?.deck;
         if (deck && !uniqueDecks.has(deck.id)) {
           uniqueDecks.set(deck.id, {
