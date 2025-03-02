@@ -119,7 +119,7 @@
   </Card.Header>
   <Card.Content>
     <h4 class="scroll-m-20 text-sm font-semibold tracking-tight">Color Popularity</h4>
-    <div class="h-[160px] w-[50%] p-4 border rounded overflow-auto">
+    <div class="h-[160px] w-[50%] p-4 border rounded overflow-auto bg-secondary">
       <PieChart
         data={Object.entries(deckColors).map(([name, value]) => ({
           key: name,
