@@ -176,8 +176,9 @@
               <div class="flex justify-center">
                 {#each deck.colors as color}
                   <div
-                    class="w-4 h-4 rounded-full bg-gradient-to-tl from-secondary {colorInfo[color]
-                      .bg}"
+                    class="w-4 h-4 rounded-full bg-gradient-to-tl from-secondary dark:from-slate-400 {colorInfo[
+                      color
+                    ].bg}"
                   ></div>
                 {/each}
               </div>
