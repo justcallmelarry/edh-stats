@@ -22,13 +22,15 @@
     };
   }
 
+  interface GamePlayer {
+    pilot: string;
+    deck: string;
+    isWinner: boolean;
+  }
+
   interface GroupedGame {
     date: string;
-    players: Array<{
-      pilot: string;
-      deck: string;
-      isWinner: boolean;
-    }>;
+    players: Array<GamePlayer>;
   }
 
   let games: GroupedGame[] = $state([]);
@@ -76,7 +78,7 @@
   });
 </script>
 
-{#snippet gameRow(player: any)}
+{#snippet gameRow(player: GamePlayer)}
   <Table.Cell>
     <div class="flex items-center">
       <Pilot text={player.pilot} />
