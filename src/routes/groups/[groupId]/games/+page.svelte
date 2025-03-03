@@ -6,6 +6,8 @@
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
+  import Pilot from '$lib/components/Pilot.svelte';
+  import Deck from '$lib/components/Deck.svelte';
 
   interface GameRow {
     id: string;
@@ -92,15 +94,13 @@
             {#each game.players as player}
               <Table.Row>
                 <Table.Cell>
-                  <div class="flex items-center gap-2">
-                    <div><User size={16} /></div>
-                    {player.pilot}
+                  <div class="flex items-center">
+                    <Pilot text={player.pilot} />
                   </div>
                 </Table.Cell>
                 <Table.Cell>
-                  <div class="flex items-center gap-2">
-                    <div><Layers size={16} /></div>
-                    {player.deck}
+                  <div class="flex items-center justify-between gap-2">
+                    <Deck text={player.deck} />
                     {#if player.isWinner}
                       <div><Trophy size={16} class="text-yellow-500" /></div>
                     {/if}

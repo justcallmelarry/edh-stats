@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
-  import { playerRankingColumns } from '../player-columns';
+  import { playerRankingColumns as pilotRankingColumns } from '../pilot-columns';
   import { deckRankingColumns } from '../deck-columns';
   import DataTable from '$lib/components/DataTable.svelte';
   import { page } from '$app/state';
@@ -140,7 +140,7 @@
         <Card.Title>Player Rankings</Card.Title>
       </Card.Header>
       <Card.Content class="px-2 md:px-6">
-        <DataTable data={playerRankings} columns={playerRankingColumns} />
+        <DataTable data={playerRankings} columns={pilotRankingColumns} />
       </Card.Content>
     </Card.Root>
     <Card.Root class="mx-auto w-full">

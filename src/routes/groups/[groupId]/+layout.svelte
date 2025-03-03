@@ -10,7 +10,7 @@
   const navigationItems = [
     { slug: 'rankings', label: 'Rankings', href: `/groups/${page.params.groupId}` },
     { slug: 'games', label: 'Game History', href: `/groups/${page.params.groupId}/games` },
-    { slug: 'add-game', label: 'Add Game', href: `/groups/${page.params.groupId}/add-game` },
+    { slug: 'add-game', label: 'Add Game', href: `/groups/${page.params.groupId}/games/new` },
     { slug: 'pilots', label: 'Pilots', href: `/groups/${page.params.groupId}/pilots` }
   ];
 </script>

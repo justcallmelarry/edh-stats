@@ -1,6 +1,8 @@
 import type { ColumnDef } from "@tanstack/table-core";
 import { createRawSnippet } from "svelte";
-import { renderSnippet } from "$lib/components/ui/data-table/index.js";
+import { renderComponent, renderSnippet } from "$lib/components/ui/data-table/index.js";
+import Deck from "$lib/components/Deck.svelte";
+import { User } from "lucide-svelte";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -17,12 +19,7 @@ export const deckRankingColumns: ColumnDef<DeckRanking>[] = [
  {
   accessorKey: "deck",
   header: "Deck",
-  cell: ({ row }) => {
-      const centerHeaderSnippet = createRawSnippet(() => ({
-        render: () => `<div class="font-medium">${row.getValue("deck")}</div>`,
-      }));
-      return renderSnippet(centerHeaderSnippet, "");
-    },
+  cell: ({ row }) => renderComponent(Deck, { size: 16, text: row.getValue("deck") }),
  },
  {
   accessorKey: "games",

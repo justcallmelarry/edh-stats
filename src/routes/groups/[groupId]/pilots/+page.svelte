@@ -5,15 +5,16 @@
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
-  import { User, ChevronRight } from 'lucide-svelte';
+  import { ChevronRight } from 'lucide-svelte';
+  import Pilot from '$lib/components/Pilot.svelte';
 
-  interface Pilot {
+  interface PilotInterface {
     id: string;
     name: string;
   }
 
   let isLoading = $state(false);
-  let pilots: Pilot[] = $state([]);
+  let pilots: PilotInterface[] = $state([]);
 
   async function fetchGames() {
     isLoading = true;
@@ -47,9 +48,8 @@
             <Table.Cell>
               <a href={`/groups/${page.params.groupId}/pilots/${pilot.id}`}>
                 <div class="flex justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <div><User size={16} /></div>
-                    {pilot.name}
+                  <div class="flex items-center">
+                    <Pilot text={pilot.name} />
                   </div>
                   <div><ChevronRight size={16} /></div>
                 </div>

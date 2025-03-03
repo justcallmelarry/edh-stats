@@ -6,7 +6,7 @@
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
   import { Layers } from 'lucide-svelte';
-  import { PieChart, pivotLonger } from 'layerchart';
+  import { PieChart } from 'layerchart';
 
   interface Deck {
     id: string;
