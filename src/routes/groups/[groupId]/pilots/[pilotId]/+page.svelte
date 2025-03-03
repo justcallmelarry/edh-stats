@@ -174,11 +174,12 @@
             </Table.Cell>
             <Table.Cell>
               <div class="flex justify-center">
-                <div class="flex rounded border bg-secondary p-1">
-                  {#each deck.colors as color}
-                    <div class="w-4 h-4 rounded-full drop-shadow-sm {colorInfo[color].bg}"></div>
-                  {/each}
-                </div>
+                {#each deck.colors as color}
+                  <div
+                    class="w-4 h-4 rounded-full bg-gradient-to-tl from-secondary {colorInfo[color]
+                      .bg}"
+                  ></div>
+                {/each}
               </div>
             </Table.Cell>
           </Table.Row>
@@ -193,3 +194,9 @@
     <Spinner />
   </div>
 {/if}
+
+<style>
+  .mtg-color {
+    background: linear-gradient(-45deg, #eee 40%, #fafafa 50%, #eee 60%);
+  }
+</style>
