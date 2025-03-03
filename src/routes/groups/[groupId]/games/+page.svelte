@@ -76,6 +76,22 @@
   });
 </script>
 
+{#snippet gameRow(player: any)}
+  <Table.Cell>
+    <div class="flex items-center">
+      <Pilot text={player.pilot} />
+    </div>
+  </Table.Cell>
+  <Table.Cell>
+    <div class="flex items-center justify-between gap-2">
+      <Deck text={player.deck} />
+      {#if player.isWinner}
+        <div><Trophy size={16} class="text-yellow-500" /></div>
+      {/if}
+    </div>
+  </Table.Cell>
+{/snippet}
+
 <div class="container mx-auto grid w-full grid-cols-1 lg:grid-cols-2 gap-2 px-0">
   {#each games as game}
     <Card.Root class="mx-auto w-full max-w-2xl mb-4">
@@ -92,21 +108,15 @@
           </Table.Header>
           <Table.Body>
             {#each game.players as player}
-              <Table.Row>
-                <Table.Cell>
-                  <div class="flex items-center">
-                    <Pilot text={player.pilot} />
-                  </div>
-                </Table.Cell>
-                <Table.Cell>
-                  <div class="flex items-center justify-between gap-2">
-                    <Deck text={player.deck} />
-                    {#if player.isWinner}
-                      <div><Trophy size={16} class="text-yellow-500" /></div>
-                    {/if}
-                  </div>
-                </Table.Cell>
-              </Table.Row>
+              {#if player.isWinner}
+                <Table.Row class="font-semibold">
+                  {@render gameRow(player)}
+                </Table.Row>
+              {:else}
+                <Table.Row>
+                  {@render gameRow(player)}
+                </Table.Row>
+              {/if}
             {/each}
           </Table.Body>
         </Table.Root>
