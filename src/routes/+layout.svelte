@@ -28,6 +28,6 @@
   setContext('user', user);
 </script>
 
-<Toaster richColors />
+<Toaster richColors toastOptions={{}} />
 <ModeWatcher />
 {@render children?.()}
