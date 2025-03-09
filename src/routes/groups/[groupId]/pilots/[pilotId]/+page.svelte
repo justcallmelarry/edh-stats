@@ -7,6 +7,7 @@
   import Spinner from '$lib/components/Spinner.svelte';
   import { Layers } from 'lucide-svelte';
   import { PieChart } from 'layerchart';
+  import { goto } from '$app/navigation';
 
   interface Deck {
     id: string;
@@ -74,6 +75,7 @@
       });
     } catch (err) {
       console.error('Error fetching pilots:', err);
+      goto('/404');
     } finally {
       isLoading = false;
     }

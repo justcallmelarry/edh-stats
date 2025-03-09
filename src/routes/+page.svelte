@@ -4,6 +4,7 @@
   import { goto } from '$app/navigation';
   import Button from '$lib/components/ui/button/button.svelte';
   import { Check } from 'lucide-svelte';
+  import { pb } from '$lib/pocketbase';
 
   let visible = false;
 
@@ -12,11 +13,16 @@
   });
 
   async function onClick() {
-    let route = '/sign-in';
-    const hasSignedIn = localStorage.getItem('hasSignedIn') === 'true';
-    if (hasSignedIn) {
-      route = '/groups';
+    let route = '/groups';
+
+    try {
+      // validate server-side the auth state
+      pb.authStore.isValid && (await pb.collection('users').authRefresh());
+    } catch (error) {
+      pb.authStore.clear();
+      route = '/sign-in';
     }
+
     await goto(route);
   }
 </script>
