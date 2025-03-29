@@ -36,13 +36,13 @@
         basePlaygroups.map(async (playgroup) => {
           try {
             // Get pilots count
-            const pilotsResult = await pb.collection('pilots').getList(1, 1, {
+            const pilots = await pb.collection('pilots').getList(1, 1, {
               filter: `playgroup = "${playgroup.id}"`,
               $cancelKey: `pilots-${playgroup.id}`
             });
 
             // Get latest game
-            const gamesResult = await pb.collection('games').getList(1, 1, {
+            const games = await pb.collection('games').getList(1, 1, {
               filter: `playgroup = "${playgroup.id}"`,
               sort: '-date',
               $cancelKey: `games-${playgroup.id}`
@@ -50,8 +50,8 @@
 
             return {
               ...playgroup,
-              pilots: pilotsResult?.totalItems ?? 0,
-              latestGameDate: gamesResult?.items[0]?.date ?? null
+              pilots: pilots?.totalItems ?? 0,
+              latestGameDate: games?.items[0]?.date ?? null
             };
           } catch (err) {
             console.error(`Error enriching playgroup ${playgroup.id}:`, err);

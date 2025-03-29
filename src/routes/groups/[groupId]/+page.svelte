@@ -9,10 +9,8 @@
   import { page } from '$app/state';
 
   interface GameRow {
-    game_id: string;
     pilot: string; // This is just the ID
     deck: string;
-    winner: boolean;
     expand: {
       pilot: {
         id: string;
@@ -21,6 +19,11 @@
       deck: {
         id: string;
         name: string;
+      };
+      game: {
+        id: string;
+        date: string;
+        winner: string;
       };
     };
   }
@@ -58,9 +61,9 @@
 
   onMount(async () => {
     try {
-      gameRows = await pb.collection('games').getFullList({
+      gameRows = await pb.collection('game_rows').getFullList({
         filter: `playgroup = "${page.params.groupId}"`,
-        expand: 'pilot,deck'
+        expand: 'pilot,deck,game'
       });
       calculateStats();
     } catch (error) {
@@ -76,8 +79,8 @@
       if (!acc[pilotName]) {
         acc[pilotName] = { wins: 0, totalGames: new Set() };
       }
-      acc[pilotName].totalGames.add(row.game_id);
-      if (row.winner) {
+      acc[pilotName].totalGames.add(row.expand.game.id);
+      if (row.expand.game.winner == row.pilot) {
         acc[pilotName].wins++;
       }
       return acc;
@@ -88,8 +91,8 @@
       if (!acc[deckName]) {
         acc[deckName] = { wins: 0, totalGames: new Set() };
       }
-      acc[deckName].totalGames.add(row.game_id);
-      if (row.winner) {
+      acc[deckName].totalGames.add(row.expand.game.id);
+      if (row.expand.game.winner == row.pilot) {
         acc[deckName].wins++;
       }
       return acc;

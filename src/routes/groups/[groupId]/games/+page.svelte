@@ -9,16 +9,19 @@
   import Pilot from '$lib/components/Pilot.svelte';
   import Deck from '$lib/components/Deck.svelte';
 
+  interface Game {
+    id: string;
+    date: string;
+    winner: string;
+  }
   interface GameRow {
     id: string;
-    game_id: string;
-    date: string;
     pilot: string;
     deck: string;
-    winner: boolean;
     expand: {
       pilot: { name: string };
       deck: { name: string };
+      game: { id: string; date: string; winner: string };
     };
   }
 
@@ -42,28 +45,44 @@
     try {
       const resultList = await pb.collection('games').getList(1, GAMES_PER_PAGE, {
         filter: `playgroup = "${page.params.groupId}"`,
-        expand: 'pilot,deck',
         sort: '-date,-created'
       });
 
       // Group records by game_id
-      const gameGroups = resultList.items.reduce<Record<string, GroupedGame>>((acc, record) => {
-        const gameRecord = record as unknown as GameRow;
-        if (!acc[gameRecord.game_id]) {
-          acc[gameRecord.game_id] = {
+      const gameGroups: Record<string, GroupedGame> = {};
+
+      for (const record of resultList.items) {
+        const gameRows = await pb.collection('game_rows').getFullList({
+          filter: `game = "${record.id}"`,
+          expand: 'pilot,deck'
+        });
+        const gameRecord = record as unknown as Game;
+
+        if (!gameGroups[gameRecord.id]) {
+          gameGroups[gameRecord.id] = {
             date: gameRecord.date,
             players: []
           };
         }
 
-        acc[gameRecord.game_id].players.push({
-          pilot: gameRecord.expand.pilot.name,
-          deck: gameRecord.expand.deck.name,
-          isWinner: gameRecord.winner
-        });
+        for (const row of gameRows) {
+          gameGroups[gameRecord.id].players.push({
+            pilot: row.expand?.pilot.name,
+            deck: row.expand?.deck.name,
+            isWinner: row.pilot == record.winner
+          });
+        }
 
-        return acc;
-      }, {});
+        gameGroups[gameRecord.id].players.sort((a, b) => {
+          if (a.isWinner && !b.isWinner) return -1;
+          if (!a.isWinner && b.isWinner) return 1;
+          if (a.pilot.toLowerCase() < b.pilot.toLowerCase()) return -1;
+          if (a.pilot.toLowerCase() > b.pilot.toLowerCase()) return 1;
+          if (a.deck.toLowerCase() < b.deck.toLowerCase()) return -1;
+          if (a.deck.toLowerCase() > b.deck.toLowerCase()) return 1;
+          return 0;
+        });
+      }
 
       games = Object.values(gameGroups);
     } catch (err) {

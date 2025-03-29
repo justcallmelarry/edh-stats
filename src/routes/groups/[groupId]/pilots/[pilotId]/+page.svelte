@@ -18,15 +18,18 @@
   }
 
   interface GameRow {
-    game_id: string;
     pilot: string; // This is just the ID
     deck: string;
-    winner: boolean;
     expand: {
       deck: {
         id: string;
         name: string;
         colors: Array<string>;
+      };
+      game: {
+        id: string;
+        date: string;
+        winner: string;
       };
     };
   }
@@ -42,9 +45,9 @@
       const pilot = await pb.collection('pilots').getOne(page.params.pilotId);
       pilotName = pilot.name;
 
-      const result: Array<GameRow> = await pb.collection('games').getFullList({
+      const result: Array<GameRow> = await pb.collection('game_rows').getFullList({
         filter: `playgroup = "${page.params.groupId}" && pilot = "${page.params.pilotId}"`,
-        expand: 'pilot,deck'
+        expand: 'deck,game'
       });
       const uniqueDecks = new Map();
       result.forEach((record) => {
@@ -59,7 +62,7 @@
           });
         }
         uniqueDecks.get(deck.id).games++;
-        if (record.winner) {
+        if (record.expand.game.winner == pilot.id) {
           uniqueDecks.get(deck.id).wins++;
         }
       });

@@ -12,6 +12,8 @@
   import { X, User, Layers } from 'lucide-svelte';
   import IconComboBox from '$lib/components/IconComboBox.svelte';
   import { page } from '$app/state';
+  import Pilot from '$lib/components/Pilot.svelte';
+  import { playerRankingColumns } from '../../../pilot-columns';
 
   interface Player {
     pilot: string;
@@ -70,10 +72,6 @@
     fetchExistingData();
   });
 
-  function generateId(): string {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36);
-  }
-
   function addPlayer(): void {
     players = [...players, { pilot: '', deck: '' }];
   }
@@ -86,8 +84,6 @@
 
   async function handleSubmit(): Promise<void> {
     try {
-      const gameId = generateId();
-
       if (!gameDate) {
         toast.error('Please select a date');
         return;
@@ -95,6 +91,15 @@
       let localDate = gameDate.toDate(getLocalTimeZone());
       localDate.setHours(12);
       const formattedDate = gameDate ? localDate.toISOString() : new Date().toISOString();
+
+      // Create game record with relations
+      let data = {
+        date: formattedDate.split('T')[0],
+        playgroup: page.params.groupId
+      };
+      let game = await pb.collection('games').create(data);
+
+      let winnerID = '';
 
       // Process each player's data
       for await (let player of players) {
@@ -104,15 +109,12 @@
           .getFirstListItem(`name = "${player.pilot}" && playgroup = "${page.params.groupId}"`)
           .catch(() => null);
 
-        let pilotId;
         if (!pilotRecord) {
           pilotRecord = await pb.collection('pilots').create({
             name: player.pilot,
-            pilot: generateId(), // Generate a new pilot ID
             playgroup: page.params.groupId
           });
         }
-        pilotId = pilotRecord?.id;
 
         // Check if deck exists by name, create if not
         let deckRecord = await pb
@@ -120,27 +122,29 @@
           .getFirstListItem(`name = "${player.deck}" && playgroup = "${page.params.groupId}"`)
           .catch(() => null);
 
-        let deckId;
         if (!deckRecord) {
           deckRecord = await pb.collection('decks').create({
             name: player.deck,
             playgroup: page.params.groupId
           });
         }
-        deckId = deckRecord?.id;
 
-        // Create game record with relations
-        let data = {
-          date: formattedDate.split('T')[0],
-          game_id: gameId,
-          pilot: pilotId,
-          deck: deckId,
-          winner: winner !== 'draw' && winner === player.pilot,
-          playgroup: page.params.groupId
+        let gameRowData = {
+          playgroup: page.params.groupId,
+          game: game.id,
+          pilot: pilotRecord?.id,
+          deck: deckRecord?.id
         };
-        await pb.collection('games').create(data);
+        await pb.collection('game_rows').create(gameRowData);
+
+        if (winner === player.pilot) {
+          winnerID = pilotRecord?.id || '';
+        }
       }
 
+      if (winnerID) {
+        await pb.collection('games').update(game.id, { winner: winnerID });
+      }
       // Reset form
       players = [
         { pilot: '', deck: '' },

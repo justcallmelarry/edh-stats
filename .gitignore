@@ -4,3 +4,5 @@ node_modules/
 pocketbase/
 build/
 .env.local
+pb_data/
+bu/
