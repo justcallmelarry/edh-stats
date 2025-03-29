@@ -8,28 +8,50 @@
   import { toast } from 'svelte-sonner';
   import { LoaderCircle } from 'lucide-svelte';
 
-
   let loading = false;
 
   let email = '';
   let password = '';
+  let passwordConfirm = '';
 
   async function onSubmit() {
     let error = '';
 
-    if (!email || !password) {
+    if (!email || !password || !passwordConfirm) {
       error = 'Please fill out all fields.';
-      return;
     }
-    loading = true;
-    try {
-      const authResult = await pb.collection('users').authWithPassword(email, password);
-      error = '';
-      await goto('/groups');
-    } catch (err) {
-      error = (err as Error).message;
+    if (password !== passwordConfirm) {
+      error = 'Passwords do not match.';
     }
-    loading = false;
+    if (password.length < 8 || passwordConfirm.length > 72) {
+      error = 'Password must be between 8 and 72 characters.';
+    }
+
+    if (error === '') {
+      loading = true;
+
+      const data = {
+        password: password,
+        passwordConfirm: passwordConfirm,
+        email: email,
+        emailVisibility: true,
+        verified: false
+      };
+
+      try {
+        const record = await pb.collection('users').create(data);
+
+        console.log(record);
+
+        await pb.collection('users').requestVerification(email);
+        toast.success("Verification email sent")
+        await goto('/groups');
+      } catch (err) {
+        error = /** @type {Error} */ (err as Error).message;
+      }
+      loading = false;
+    }
+
     if (error !== '') {
       toast.error(error);
     }
@@ -39,8 +61,8 @@
 <div class="h-screen flex items-center justify-center">
   <Card.Root class="mx-auto max-w-sm">
     <Card.Header>
-      <Card.Title class="text-2xl">Login</Card.Title>
-      <Card.Description>Enter your email below to login to your account</Card.Description>
+      <Card.Title class="text-2xl">Register</Card.Title>
+      <Card.Description>Fill in the form to create a new account</Card.Description>
     </Card.Header>
     <Card.Content>
       <form on:submit|preventDefault={onSubmit} class="card-body">
@@ -61,18 +83,21 @@
             </div>
             <Input bind:value={password} id="password" type="password" required />
           </div>
+          <div class="grid gap-2">
+            <div class="flex items-center">
+              <Label for="password">Repeat password</Label>
+            </div>
+            <Input bind:value={passwordConfirm} id="passwordConfirm" type="password" required />
+          </div>
           <Button type="submit" class="w-full" disabled={loading}>
             {#if loading}
               <LoaderCircle class="animate-spin" />
             {:else}
-              Login
+              Register
             {/if}
           </Button>
           <div class="mt-4 text-center text-sm">
-            <a href="/register" class="underline">Register</a>
-          </div>
-          <div class="text-center text-sm">
-            <a href="/reset-password" class="underline">Forgot your password?</a>
+            <a href="/sign-in" class="underline">Already have an accoun?</a>
           </div>
         </div>
       </form>
