@@ -18,7 +18,7 @@ migrate((app) => {
         winner: null
       };
     }
-    if (row.get("pilot")) {
+    if (row.get("winner")) {
       games[gameID].winner = row.get("pilot")
     }
     games[gameID].rows.push(row);
