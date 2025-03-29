@@ -43,7 +43,6 @@
     wins: number;
     games: number;
     winRatio: number;
-    score: number;
   }
 
   interface DeckRanking {
@@ -51,7 +50,6 @@
     wins: number;
     games: number;
     winRatio: number;
-    score: number;
   }
 
   let gameRows: GameRow[] = [];
@@ -105,11 +103,10 @@
         games: stats.totalGames.size,
         winRatio: stats.wins / stats.totalGames.size,
         // @ts-ignore
-        score: stats.totalGames.size * (stats.wins / stats.totalGames.size).toFixed(3)
       }))
       .sort((a, b) => {
-        if (b.score !== a.score) {
-          return b.score - a.score;
+        if (b.wins !== a.wins) {
+          return b.wins - a.wins;
         }
 
         return b.games - a.games;
@@ -121,12 +118,10 @@
         wins: stats.wins,
         games: stats.totalGames.size,
         winRatio: stats.wins / stats.totalGames.size,
-        // @ts-ignore
-        score: stats.totalGames.size * (stats.wins / stats.totalGames.size).toFixed(3)
       }))
       .sort((a, b) => {
-        if (b.score !== a.score) {
-          return b.score - a.score;
+        if (b.wins !== a.wins) {
+          return b.wins - a.wins;
         }
 
         return b.games - a.games;

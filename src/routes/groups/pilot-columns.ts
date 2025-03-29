@@ -64,19 +64,4 @@ export const playerRankingColumns: ColumnDef<PlayerRanking>[] = [
       return renderSnippet(percentHeaderSnippet, "");
     },
  },
- {
-  accessorKey: "score",
-  header: () => {
-      const centerHeaderSnippet = createRawSnippet(() => ({
-        render: () => `<div class="text-center">Ranking</div>`,
-      }));
-      return renderSnippet(centerHeaderSnippet, "");
-    },
-  cell: ({ row }) => {
-      const percentHeaderSnippet = createRawSnippet(() => ({
-        render: () => `<div class="text-center">${(Number(row.getValue("score"))).toFixed(3)}</div>`,
-      }));
-      return renderSnippet(percentHeaderSnippet, "");
-    },
- },
 ];
