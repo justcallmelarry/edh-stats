@@ -32,7 +32,7 @@
 
 <Toaster richColors toastOptions={{}} />
 <ModeWatcher />
-{#if PUBLIC_DEV_ENV}
+{#if PUBLIC_DEV_ENV === "true"}
   <DevEnv />
 {/if}
 {@render children?.()}
