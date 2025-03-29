@@ -1,10 +1,12 @@
 <script>
   import { pb } from '$lib/pocketbase';
   import { onMount, setContext } from 'svelte';
+  import { PUBLIC_DEV_ENV } from '$env/static/public';
   import { writable } from 'svelte/store';
   import '../app.css';
   import { ModeWatcher } from 'mode-watcher';
   import { Toaster } from '$lib/components/ui/sonner/index.js';
+  import DevEnv from '$lib/components/DevEnv.svelte';
 
   let { children } = $props();
 
@@ -30,4 +32,7 @@
 
 <Toaster richColors toastOptions={{}} />
 <ModeWatcher />
+{#if PUBLIC_DEV_ENV}
+  <DevEnv />
+{/if}
 {@render children?.()}
