@@ -21,7 +21,7 @@
 
     if (!pb.authStore.record?.verified) {
       toast.error('Your email is not yet verified');
-      await goto('/');
+      await goto('/sign-in');
     }
   });
 </script>
