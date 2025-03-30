@@ -4,8 +4,6 @@ import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/in
 import Deck from '$lib/components/Deck.svelte';
 import { User } from 'lucide-svelte';
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type DeckRanking = {
   deck: string;
   games: number;

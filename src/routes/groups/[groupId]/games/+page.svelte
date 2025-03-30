@@ -17,9 +17,14 @@
     winner: string;
   }
 
+  interface DBRecord {
+    id: string;
+    name: string;
+  }
+
   interface GamePlayer {
-    pilot: string;
-    deck: string;
+    pilot: DBRecord;
+    deck: DBRecord;
     isWinner: boolean;
   }
 
@@ -61,8 +66,14 @@
 
         for (const row of gameRows) {
           gameGroups[gameRecord.id].players.push({
-            pilot: row.expand?.pilot.name,
-            deck: row.expand?.deck.name,
+            pilot: {
+              id: row.expand?.pilot.id,
+              name: row.expand?.pilot.name
+            },
+            deck: {
+              id: row.expand?.deck.id,
+              name: row.expand?.deck.name
+            },
             isWinner: row.pilot == record.winner
           });
         }
@@ -70,10 +81,10 @@
         gameGroups[gameRecord.id].players.sort((a, b) => {
           if (a.isWinner && !b.isWinner) return -1;
           if (!a.isWinner && b.isWinner) return 1;
-          if (a.pilot.toLowerCase() < b.pilot.toLowerCase()) return -1;
-          if (a.pilot.toLowerCase() > b.pilot.toLowerCase()) return 1;
-          if (a.deck.toLowerCase() < b.deck.toLowerCase()) return -1;
-          if (a.deck.toLowerCase() > b.deck.toLowerCase()) return 1;
+          if (a.pilot.name.toLowerCase() < b.pilot.name.toLowerCase()) return -1;
+          if (a.pilot.name.toLowerCase() > b.pilot.name.toLowerCase()) return 1;
+          if (a.deck.name.toLowerCase() < b.deck.name.toLowerCase()) return -1;
+          if (a.deck.name.toLowerCase() > b.deck.name.toLowerCase()) return 1;
           return 0;
         });
       }
@@ -99,12 +110,16 @@
 {#snippet gameRow(player: GamePlayer)}
   <Table.Cell>
     <div class="flex items-center">
-      <Pilot text={player.pilot} winner={player.isWinner} />
+      <Pilot
+        link={`/groups/${page.params.groupId}/pilots/${player.pilot.id}`}
+        text={player.pilot.name}
+        winner={player.isWinner}
+      />
     </div>
   </Table.Cell>
   <Table.Cell>
     <div class="flex items-center justify-between gap-2">
-      <Deck text={player.deck} winner={player.isWinner} />
+      <Deck text={player.deck.name} winner={player.isWinner} />
       {#if player.isWinner}
         <div><Trophy size={16} class="text-yellow-500" /></div>
       {/if}

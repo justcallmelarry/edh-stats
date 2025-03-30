@@ -39,7 +39,7 @@
   });
 </script>
 
-<Card.Root class="mx-auto mb-4 w-full">
+<Card.Root class="mx-auto w-full mb-4">
   <Card.Content>
     <Table.Root>
       <Table.Body>
@@ -49,7 +49,7 @@
               <a href={`/groups/${page.params.groupId}/pilots/${pilot.id}`}>
                 <div class="flex justify-between gap-2">
                   <div class="flex items-center">
-                    <Pilot text={pilot.name} />
+                    <Pilot link={`/groups/${page.params.groupId}/pilots/${pilot.id}`} text={pilot.name} />
                   </div>
                   <div><ChevronRight size={16} /></div>
                 </div>

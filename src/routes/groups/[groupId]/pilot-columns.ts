@@ -3,20 +3,19 @@ import { createRawSnippet } from 'svelte';
 import { renderSnippet, renderComponent } from '$lib/components/ui/data-table/index.js';
 import Pilot from '$lib/components/Pilot.svelte';
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type PlayerRanking = {
   pilot: string;
   games: number;
   wins: number;
   winRatio: number;
+  link: string;
 };
 
 export const playerRankingColumns: ColumnDef<PlayerRanking>[] = [
   {
     accessorKey: 'pilot',
     header: 'Pilot',
-    cell: ({ row }) => renderComponent(Pilot, { size: 16, text: row.getValue('pilot') })
+    cell: ({ row }) => renderComponent(Pilot, { size: 16, link: row.getValue('link') as string, text: row.getValue('pilot') })
   },
   {
     accessorKey: 'games',
@@ -63,5 +62,11 @@ export const playerRankingColumns: ColumnDef<PlayerRanking>[] = [
       }));
       return renderSnippet(percentHeaderSnippet, '');
     }
+  },
+  {
+    accessorKey: 'link',
+    enableHiding: true,
+    header: () => null,
+    cell: () => null
   }
 ];

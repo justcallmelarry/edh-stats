@@ -3,8 +3,8 @@
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
-  import { playerRankingColumns as pilotRankingColumns } from '../pilot-columns';
-  import { deckRankingColumns } from '../deck-columns';
+  import { playerRankingColumns as pilotRankingColumns } from './pilot-columns';
+  import { deckRankingColumns } from './deck-columns';
   import DataTable from '$lib/components/DataTable.svelte';
   import { page } from '$app/state';
 
@@ -29,6 +29,7 @@
   }
 
   interface PlayerStats {
+    id: string;
     wins: number;
     totalGames: Set<string>;
   }
@@ -43,6 +44,7 @@
     wins: number;
     games: number;
     winRatio: number;
+    link: string;
   }
 
   interface DeckRanking {
@@ -75,7 +77,7 @@
     const playerStats = gameRows.reduce((acc: Record<string, PlayerStats>, row: GameRow) => {
       const pilotName = row.expand.pilot.name;
       if (!acc[pilotName]) {
-        acc[pilotName] = { wins: 0, totalGames: new Set() };
+        acc[pilotName] = { id: row.expand.pilot.id, wins: 0, totalGames: new Set() };
       }
       acc[pilotName].totalGames.add(row.expand.game.id);
       if (row.expand.game.winner == row.pilot) {
@@ -101,7 +103,8 @@
         pilot,
         wins: stats.wins,
         games: stats.totalGames.size,
-        winRatio: stats.wins / stats.totalGames.size
+        winRatio: stats.wins / stats.totalGames.size,
+        link: `/groups/${page.params.groupId}/pilots/${stats.id}`
         // @ts-ignore
       }))
       .sort((a, b) => {
@@ -111,6 +114,7 @@
 
         return b.games - a.games;
       });
+    console.log(playerRankings)
 
     deckRankings = Object.entries(deckStats)
       .map(([deck, stats]) => ({
