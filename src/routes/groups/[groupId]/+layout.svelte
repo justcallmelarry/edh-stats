@@ -12,14 +12,18 @@
   const navigationItems = [
     { slug: 'rankings', label: 'Rankings', href: `/groups/${page.params.groupId}` },
     { slug: 'games', label: 'Game History', href: `/groups/${page.params.groupId}/games` },
-    { slug: 'add-game', label: 'Add Game', href: `/groups/${page.params.groupId}/games/new` }
+    { slug: 'add-game', label: 'Add Game', href: `/groups/${page.params.groupId}/games/new` },
+    { slug: 'settings', label: 'Settings', href: `/groups/${page.params.groupId}/settings` }
   ];
 
   onMount(async () => {
     // Check if the groupId exists in the groups collection
     const groupId = page.params.groupId;
     try {
-      const groupExists = await pb.collection('playgroups').getOne(groupId);
+      if (page.route.id === '/groups/[groupId]/settings') {
+        return;
+      }
+      await pb.collection('playgroups').getOne(groupId);
     } catch (error) {
       goto('/404');
     }

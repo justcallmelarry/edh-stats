@@ -41,8 +41,6 @@
       try {
         const record = await pb.collection('users').create(data);
 
-        console.log(record);
-
         await pb.collection('users').requestVerification(email);
         toast.success('Verification email sent');
         await goto('/groups');

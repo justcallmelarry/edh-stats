@@ -15,7 +15,12 @@ export const playerRankingColumns: ColumnDef<PlayerRanking>[] = [
   {
     accessorKey: 'pilot',
     header: 'Pilot',
-    cell: ({ row }) => renderComponent(Pilot, { size: 16, link: row.getValue('link') as string, text: row.getValue('pilot') })
+    cell: ({ row }) =>
+      renderComponent(Pilot, {
+        size: 16,
+        link: row.getValue('link') as string,
+        text: row.getValue('pilot')
+      })
   },
   {
     accessorKey: 'games',

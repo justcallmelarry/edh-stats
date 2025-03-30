@@ -8,13 +8,19 @@ export type DeckRanking = {
   games: number;
   wins: number;
   winRatio: number;
+  link: string;
 };
 
 export const deckRankingColumns: ColumnDef<DeckRanking>[] = [
   {
     accessorKey: 'deck',
     header: 'Deck',
-    cell: ({ row }) => renderComponent(Deck, { size: 16, text: row.getValue('deck') })
+    cell: ({ row }) =>
+      renderComponent(Deck, {
+        size: 16,
+        text: row.getValue('deck'),
+        link: row.getValue('link') as string
+      })
   },
   {
     accessorKey: 'games',
@@ -61,5 +67,11 @@ export const deckRankingColumns: ColumnDef<DeckRanking>[] = [
       }));
       return renderSnippet(percentHeaderSnippet, '');
     }
+  },
+  {
+    accessorKey: 'link',
+    enableHiding: true,
+    header: () => null,
+    cell: () => null
   }
 ];

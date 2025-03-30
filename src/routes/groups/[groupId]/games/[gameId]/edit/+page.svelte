@@ -76,7 +76,6 @@
         pilot: row.expand?.pilot.name || '',
         deck: row.expand?.deck.name || ''
       }));
-      console.log(players);
     } catch (err) {
       console.error('Error fetching game data:', err);
       toast.error('Failed to load game data');

@@ -3,6 +3,6 @@ export const ssr = false;
 
 export const load = () => {
   return {
-    tab: ""
+    tab: ''
   };
 };

@@ -23,7 +23,7 @@
       </div>
     </CardContent>
     <CardFooter class="flex justify-center pb-6">
-      <Button href="/" variant="default" size="lg">Go back home</Button>
+      <Button href="/groups" variant="default" size="lg">Go back home</Button>
     </CardFooter>
   </Card>
 </div>

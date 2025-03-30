@@ -2,5 +2,5 @@ export const TABS = {
   RANKINGS: 'rankings',
   ADD_GAME: 'add-game',
   GAMES: 'games',
-  SETTINGS: 'settings',
+  SETTINGS: 'settings'
 } as const;

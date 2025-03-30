@@ -28,17 +28,11 @@
     };
   }
 
-  interface PlayerStats {
+  interface Stats {
     id: string;
     wins: number;
     totalGames: Set<string>;
   }
-
-  interface DeckStats {
-    wins: number;
-    totalGames: Set<string>;
-  }
-
   interface PlayerRanking {
     pilot: string;
     wins: number;
@@ -52,6 +46,7 @@
     wins: number;
     games: number;
     winRatio: number;
+    link: string;
   }
 
   let gameRows: GameRow[] = [];
@@ -74,7 +69,7 @@
   });
 
   function calculateStats() {
-    const playerStats = gameRows.reduce((acc: Record<string, PlayerStats>, row: GameRow) => {
+    const playerStats = gameRows.reduce((acc: Record<string, Stats>, row: GameRow) => {
       const pilotName = row.expand.pilot.name;
       if (!acc[pilotName]) {
         acc[pilotName] = { id: row.expand.pilot.id, wins: 0, totalGames: new Set() };
@@ -86,10 +81,10 @@
       return acc;
     }, {});
 
-    const deckStats = gameRows.reduce((acc: Record<string, DeckStats>, row: GameRow) => {
+    const deckStats = gameRows.reduce((acc: Record<string, Stats>, row: GameRow) => {
       const deckName = row.expand.deck.name;
       if (!acc[deckName]) {
-        acc[deckName] = { wins: 0, totalGames: new Set() };
+        acc[deckName] = { id: row.expand.deck.id, wins: 0, totalGames: new Set() };
       }
       acc[deckName].totalGames.add(row.expand.game.id);
       if (row.expand.game.winner == row.pilot) {
@@ -114,14 +109,14 @@
 
         return b.games - a.games;
       });
-    console.log(playerRankings)
 
     deckRankings = Object.entries(deckStats)
       .map(([deck, stats]) => ({
         deck,
         wins: stats.wins,
         games: stats.totalGames.size,
-        winRatio: stats.wins / stats.totalGames.size
+        winRatio: stats.wins / stats.totalGames.size,
+        link: `/groups/${page.params.groupId}/decks/${stats.id}/edit`
       }))
       .sort((a, b) => {
         if (b.wins !== a.wins) {
