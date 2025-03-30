@@ -1,13 +1,14 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import { Trophy } from 'lucide-svelte';
+  import { Pen, Trophy } from 'lucide-svelte';
   import { pb } from '$lib/pocketbase';
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
   import Pilot from '$lib/components/Pilot.svelte';
   import Deck from '$lib/components/Deck.svelte';
+  import Button from '$lib/components/ui/button/button.svelte';
 
   interface Game {
     id: string;
@@ -32,6 +33,7 @@
   }
 
   interface GroupedGame {
+    id: string;
     date: string;
     players: Array<GamePlayer>;
   }
@@ -60,6 +62,7 @@
 
         if (!gameGroups[gameRecord.id]) {
           gameGroups[gameRecord.id] = {
+            id: gameRecord.id,
             date: gameRecord.date,
             players: []
           };
@@ -116,10 +119,18 @@
 <div class="container mx-auto grid w-full grid-cols-1 gap-2 px-0 lg:grid-cols-2">
   {#each games as game}
     <Card.Root class="mx-auto mb-4 w-full max-w-2xl">
-      <Card.Header>
+      <Card.Header class="mb-2 flex flex-row items-center justify-between">
         <Card.Title>Game from {game.date}</Card.Title>
+        <Button
+          aria-label="Edit Game"
+          size={'icon'}
+          variant="ghost"
+          href={`/groups/${page.params.groupId}/games/${game.id}/edit`}
+        >
+          <Pen class="text-neutral-500" />
+        </Button>
       </Card.Header>
-      <Card.Content>
+      <Card.Content class="pt-0">
         <Table.Root>
           <Table.Header>
             <Table.Row>
@@ -129,7 +140,7 @@
           </Table.Header>
           <Table.Body>
             {#each game.players as player}
-              <Table.Row class="font-semibold">
+              <Table.Row>
                 {@render gameRow(player)}
               </Table.Row>
             {/each}

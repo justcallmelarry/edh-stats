@@ -1,6 +1,6 @@
 <script lang="ts">
   import { pb } from '$lib/pocketbase';
-  import { type DateValue, getLocalTimeZone } from '@internationalized/date';
+  import { type DateValue, parseDate, getLocalTimeZone } from '@internationalized/date';
   import { onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
   import { page } from '$app/state';
@@ -59,8 +59,33 @@
     }
   }
 
+  async function fetchGameData() {
+    try {
+      const game = await pb.collection('games').getOne(page.params.gameId, { expand: 'winner' });
+      const gameRows = await pb.collection('game_rows').getFullList({
+        filter: `game = "${page.params.gameId}"`,
+        expand: 'pilot,deck'
+      });
+
+      // Populate game data
+      gameDate = parseDate(game.date);
+      winner = game.expand?.winner.name || 'draw';
+
+      // Populate players
+      players = gameRows.map((row) => ({
+        pilot: row.expand?.pilot.name || '',
+        deck: row.expand?.deck.name || ''
+      }));
+      console.log(players);
+    } catch (err) {
+      console.error('Error fetching game data:', err);
+      toast.error('Failed to load game data');
+    }
+  }
+
   onMount(() => {
     fetchExistingData();
+    fetchGameData();
   });
 
   async function handleSubmit(): Promise<void> {
@@ -73,14 +98,15 @@
       localDate.setHours(12);
       const formattedDate = gameDate ? localDate.toISOString() : new Date().toISOString();
 
-      // Create game record with relations
-      let data = {
-        date: formattedDate.split('T')[0],
-        playgroup: page.params.groupId
-      };
-      let game = await pb.collection('games').create(data);
-
       let winnerID = '';
+
+      // Delete existing game rows
+      const existingRows = await pb.collection('game_rows').getFullList({
+        filter: `game = "${page.params.gameId}"`
+      });
+      for (const row of existingRows) {
+        await pb.collection('game_rows').delete(row.id);
+      }
 
       // Process each player's data
       for await (let player of players) {
@@ -112,7 +138,7 @@
 
         let gameRowData = {
           playgroup: page.params.groupId,
-          game: game.id,
+          game: page.params.gameId,
           pilot: pilotRecord?.id,
           deck: deckRecord?.id
         };
@@ -123,21 +149,13 @@
         }
       }
 
-      if (winnerID) {
-        await pb.collection('games').update(game.id, { winner: winnerID });
-      }
-      // Reset form
-      players = [
-        { pilot: '', deck: '' },
-        { pilot: '', deck: '' },
-        { pilot: '', deck: '' },
-        { pilot: '', deck: '' }
-      ];
-      winner = 'draw';
-      toast.success('Game added!');
-
-      // Refresh the existing data lists
-      await fetchExistingData();
+      // Update game record
+      let data = {
+        date: formattedDate.split('T')[0],
+        winner: winnerID
+      };
+      await pb.collection('games').update(page.params.gameId, data);
+      toast.success('Game updated!');
     } catch (err: unknown) {
       toast.error((err as Error).message);
     }
@@ -151,4 +169,5 @@
   {existingPilots}
   {existingDecks}
   onSubmit={handleSubmit}
+  isEdit={true}
 />
