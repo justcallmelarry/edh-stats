@@ -24,6 +24,7 @@ EXPOSE 8090
 
 COPY --from=build /app/build  /pb/pb_public
 COPY migrations /pb/pb_migrations
+COPY hooks /pb/pb_hooks
 
 # start PocketBase
 CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090"]
