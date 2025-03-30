@@ -99,19 +99,13 @@
 
 {#snippet gameRow(player: GamePlayer)}
   <Table.Cell>
-    {#if player.isWinner}
-      <div class="shimmer flex items-center font-semibold">
-        <Pilot text={player.pilot} />
-      </div>
-    {:else}
-      <div class="flex items-center">
-        <Pilot text={player.pilot} />
-      </div>
-    {/if}
+    <div class="flex items-center">
+      <Pilot text={player.pilot} winner={player.isWinner} />
+    </div>
   </Table.Cell>
   <Table.Cell>
     <div class="flex items-center justify-between gap-2">
-      <Deck text={player.deck} />
+      <Deck text={player.deck} winner={player.isWinner} />
       {#if player.isWinner}
         <div><Trophy size={16} class="text-yellow-500" /></div>
       {/if}
@@ -150,45 +144,3 @@
     <Spinner />
   </div>
 {/if}
-
-<style>
-  .shimmer {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.1);
-    background: -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      from(#222),
-      to(#222),
-      color-stop(0.5, #fff)
-    );
-    background: -moz-gradient(
-      linear,
-      left top,
-      right top,
-      from(#222),
-      to(#222),
-      color-stop(0.5, #fff)
-    );
-    background: gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
-    -webkit-background-size: 125px 100%;
-    -moz-background-size: 125px 100%;
-    background-size: 125px 100%;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    background-clip: text;
-    -webkit-animation-name: shimmer;
-    -moz-animation-name: shimmer;
-    animation-name: shimmer;
-    -webkit-animation-duration: 2s;
-    -moz-animation-duration: 2s;
-    animation-duration: 2s;
-    -webkit-animation-iteration-count: infinite;
-    -moz-animation-iteration-count: infinite;
-    animation-iteration-count: infinite;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    background-color: #222;
-  }
-</style>
