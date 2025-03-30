@@ -9,6 +9,8 @@
   import Pilot from '$lib/components/Pilot.svelte';
   import Deck from '$lib/components/Deck.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
+  import Separator from '$lib/components/ui/separator/separator.svelte';
+  import TextSeparator from '$lib/components/TextSeparator.svelte';
 
   interface Game {
     id: string;
@@ -38,7 +40,7 @@
     players: Array<GamePlayer>;
   }
 
-  let games: GroupedGame[] = $state([]);
+  let games: Record<string, GroupedGame[]> = $state({});
   let isLoading = $state(false);
   const GAMES_PER_PAGE = 300;
 
@@ -87,7 +89,12 @@
         });
       }
 
-      games = Object.values(gameGroups);
+      for (const game of Object.values(gameGroups)) {
+        if (!games[game.date]) {
+          games[game.date] = [];
+        }
+        games[game.date].push(game);
+      }
     } catch (err) {
       console.error('Error fetching games:', err);
     } finally {
@@ -116,38 +123,43 @@
   </Table.Cell>
 {/snippet}
 
-<div class="container mx-auto grid w-full grid-cols-1 gap-2 px-0 lg:grid-cols-2">
-  {#each games as game}
-    <Card.Root class="mx-auto mb-4 w-full max-w-2xl">
-      <Card.Header class="mb-2 flex flex-row items-center justify-between">
-        <Card.Title>Game from {game.date}</Card.Title>
-        <Button
-          aria-label="Edit Game"
-          size={'icon'}
-          variant="ghost"
-          href={`/groups/${page.params.groupId}/games/${game.id}/edit`}
-        >
-          <Pen class="text-neutral-500" />
-        </Button>
-      </Card.Header>
-      <Card.Content class="pt-0">
-        <Table.Root>
-          <Table.Header>
-            <Table.Row>
-              <Table.Head>Pilot</Table.Head>
-              <Table.Head>Deck</Table.Head>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {#each game.players as player}
-              <Table.Row>
-                {@render gameRow(player)}
-              </Table.Row>
-            {/each}
-          </Table.Body>
-        </Table.Root>
-      </Card.Content>
-    </Card.Root>
+<div class="container mx-auto w-full px-0">
+  {#each Object.entries(games) as [date, gameList]}
+    <TextSeparator>{date}</TextSeparator>
+    <div class="grid grid-cols-1 gap-2 w-full lg:grid-cols-2">
+      {#each gameList as game}
+        <Card.Root class="mx-auto mb-4 w-full max-w-2xl">
+          <Card.Header class="mb-2 flex flex-row items-center justify-between">
+            <Card.Title>Game #{games[date].length - gameList.indexOf(game)}</Card.Title>
+            <Button
+              aria-label="Edit Game"
+              size={'icon'}
+              variant="ghost"
+              href={`/groups/${page.params.groupId}/games/${game.id}/edit`}
+            >
+              <Pen class="text-neutral-500" />
+            </Button>
+          </Card.Header>
+          <Card.Content class="pt-0">
+            <Table.Root>
+              <Table.Header>
+                <Table.Row>
+                  <Table.Head>Pilot</Table.Head>
+                  <Table.Head>Deck</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {#each game.players as player}
+                  <Table.Row>
+                    {@render gameRow(player)}
+                  </Table.Row>
+                {/each}
+              </Table.Body>
+            </Table.Root>
+          </Card.Content>
+        </Card.Root>
+      {/each}
+    </div>
   {/each}
 </div>
 {#if isLoading}
