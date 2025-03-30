@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Table from '$lib/components/ui/table/index.js';
-  import { User, Layers, Trophy } from 'lucide-svelte';
+  import { Trophy } from 'lucide-svelte';
   import { pb } from '$lib/pocketbase';
   import { page } from '$app/state';
   import { onMount } from 'svelte';
@@ -99,9 +99,15 @@
 
 {#snippet gameRow(player: GamePlayer)}
   <Table.Cell>
-    <div class="flex items-center">
-      <Pilot text={player.pilot} />
-    </div>
+    {#if player.isWinner}
+      <div class="shimmer flex items-center font-semibold">
+        <Pilot text={player.pilot} />
+      </div>
+    {:else}
+      <div class="flex items-center">
+        <Pilot text={player.pilot} />
+      </div>
+    {/if}
   </Table.Cell>
   <Table.Cell>
     <div class="flex items-center justify-between gap-2">
@@ -113,9 +119,9 @@
   </Table.Cell>
 {/snippet}
 
-<div class="container mx-auto grid w-full grid-cols-1 lg:grid-cols-2 gap-2 px-0">
+<div class="container mx-auto grid w-full grid-cols-1 gap-2 px-0 lg:grid-cols-2">
   {#each games as game}
-    <Card.Root class="mx-auto w-full max-w-2xl mb-4">
+    <Card.Root class="mx-auto mb-4 w-full max-w-2xl">
       <Card.Header>
         <Card.Title>Game from {game.date}</Card.Title>
       </Card.Header>
@@ -129,15 +135,9 @@
           </Table.Header>
           <Table.Body>
             {#each game.players as player}
-              {#if player.isWinner}
-                <Table.Row class="font-semibold">
-                  {@render gameRow(player)}
-                </Table.Row>
-              {:else}
-                <Table.Row>
-                  {@render gameRow(player)}
-                </Table.Row>
-              {/if}
+              <Table.Row class="font-semibold">
+                {@render gameRow(player)}
+              </Table.Row>
             {/each}
           </Table.Body>
         </Table.Root>
@@ -150,3 +150,45 @@
     <Spinner />
   </div>
 {/if}
+
+<style>
+  .shimmer {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.1);
+    background: -webkit-gradient(
+      linear,
+      left top,
+      right top,
+      from(#222),
+      to(#222),
+      color-stop(0.5, #fff)
+    );
+    background: -moz-gradient(
+      linear,
+      left top,
+      right top,
+      from(#222),
+      to(#222),
+      color-stop(0.5, #fff)
+    );
+    background: gradient(linear, left top, right top, from(#222), to(#222), color-stop(0.5, #fff));
+    -webkit-background-size: 125px 100%;
+    -moz-background-size: 125px 100%;
+    background-size: 125px 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-animation-name: shimmer;
+    -moz-animation-name: shimmer;
+    animation-name: shimmer;
+    -webkit-animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-color: #222;
+  }
+</style>

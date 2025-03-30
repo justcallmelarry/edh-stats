@@ -44,10 +44,10 @@
               onSelect={() => {
                 value = entry.name;
                 closeAndFocusTrigger();
-              }}>
-              {entry.name}
-              </Command.Item
+              }}
             >
+              {entry.name}
+            </Command.Item>
           {/each}
         </Command.Group>
       </Command.List>

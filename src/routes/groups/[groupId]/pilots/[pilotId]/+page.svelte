@@ -122,13 +122,13 @@
   };
 </script>
 
-<Card.Root class="mx-auto w-full mb-4">
+<Card.Root class="mx-auto mb-4 w-full">
   <Card.Header>
     <Card.Title>Pilot Info - {pilotName}</Card.Title>
   </Card.Header>
   <Card.Content>
     <h4 class="scroll-m-20 text-sm font-semibold tracking-tight">Color Popularity</h4>
-    <div class="h-[160px] w-[50%] p-4 border rounded overflow-auto bg-secondary">
+    <div class="h-[160px] w-[50%] overflow-auto rounded border bg-secondary p-4">
       <PieChart
         data={Object.entries(deckColors).map(([name, value]) => ({
           key: name,
@@ -146,7 +146,7 @@
     </div>
   </Card.Content>
 </Card.Root>
-<Card.Root class="mx-auto w-full mb-4">
+<Card.Root class="mx-auto mb-4 w-full">
   <Card.Header>
     <Card.Title>Pilot Decks</Card.Title>
   </Card.Header>
@@ -181,7 +181,7 @@
               <div class="flex justify-center">
                 {#each deck.colors as color}
                   <div
-                    class="w-4 h-4 rounded-full bg-gradient-to-tl from-secondary dark:from-slate-400 {colorInfo[
+                    class="h-4 w-4 rounded-full bg-gradient-to-tl from-secondary dark:from-slate-400 {colorInfo[
                       color
                     ].bg}"
                   ></div>

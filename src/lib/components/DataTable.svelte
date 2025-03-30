@@ -76,7 +76,7 @@
       </Table.Body>
     </Table.Root>
   </div>
-  <div class="flex items-center justify-between items-center space-x-2 py-4">
+  <div class="flex items-center items-center justify-between space-x-2 py-4">
     <div>
       <small class="text-sm text-muted-foreground"
         >Page {pagination.pageIndex + 1} of {table.getPageCount()}</small

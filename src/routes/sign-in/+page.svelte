@@ -8,7 +8,6 @@
   import { toast } from 'svelte-sonner';
   import { LoaderCircle } from 'lucide-svelte';
 
-
   let loading = false;
 
   let email = '';
@@ -36,7 +35,7 @@
   }
 </script>
 
-<div class="h-screen flex items-center justify-center">
+<div class="flex h-screen items-center justify-center">
   <Card.Root class="mx-auto max-w-sm">
     <Card.Header>
       <Card.Title class="text-2xl">Login</Card.Title>

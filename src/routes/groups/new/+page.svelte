@@ -33,10 +33,12 @@
 </script>
 
 <div class="container mx-auto p-4">
-  <Card.Root class="max-w-md mx-auto">
+  <Card.Root class="mx-auto max-w-md">
     <Card.Header>
       <Card.Title>Create New Playgroup</Card.Title>
-      <Card.Description>Create a new playgroup to start tracking games with friends</Card.Description>
+      <Card.Description
+        >Create a new playgroup to start tracking games with friends</Card.Description
+      >
     </Card.Header>
     <Card.Content>
       <form on:submit|preventDefault={handleSubmit} class="space-y-4">
@@ -45,7 +47,7 @@
           <Input type="text" id="name" bind:value={name} required />
         </div>
         {#if error}
-          <p class="text-red-500 text-sm">{error}</p>
+          <p class="text-sm text-red-500">{error}</p>
         {/if}
         <div class="flex justify-end space-x-2">
           <Button variant="outline" href="/groups">Cancel</Button>

@@ -7,15 +7,15 @@
 <div class="flex min-h-screen items-center justify-center bg-background p-4">
   <Card class="mx-auto max-w-md shadow-lg">
     <CardHeader>
-      <div class="flex justify-center mb-2">
-        <div class="rounded-full bg-muted p-4 flex items-center justify-center">
+      <div class="mb-2 flex justify-center">
+        <div class="flex items-center justify-center rounded-full bg-muted p-4">
           <X class="h-10 w-10 text-destructive" />
         </div>
       </div>
       <CardTitle class="text-center text-4xl font-bold">404</CardTitle>
     </CardHeader>
     <CardContent>
-      <div class="text-center space-y-4">
+      <div class="space-y-4 text-center">
         <h2 class="text-2xl font-semibold tracking-tight">Page not found</h2>
         <p class="text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.

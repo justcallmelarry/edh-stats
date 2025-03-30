@@ -27,32 +27,32 @@
   }
 </script>
 
-<main class="min-h-screen flex flex-col md:flex-row">
+<main class="flex min-h-screen flex-col md:flex-row">
   <div
-    class="w-full md:w-1/2 bg-cover bg-center"
+    class="w-full bg-cover bg-center md:w-1/2"
     style="background-image: url('/assets/edh.jpg');"
   ></div>
 
-  <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
+  <div class="flex w-full flex-col justify-center p-8 md:w-1/2">
     {#if visible}
       <div transition:fade={{ duration: 500 }}>
         <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           Welcome to EDH Stats
         </h1>
 
-        <p class="leading-7 [&:not(:first-child)]:mt-6 pb-4">
+        <p class="pb-4 leading-7 [&:not(:first-child)]:mt-6">
           Track your Commander games, analyze your performance, and improve your deck-building
           skills.
         </p>
 
         <ul class="mb-8">
-          <li class="flex items-center mb-3">
+          <li class="mb-3 flex items-center">
             <Check color="#22c55e" />&nbsp;Record game results and track win rates
           </li>
-          <li class="flex items-center mb-3">
+          <li class="mb-3 flex items-center">
             <Check color="#22c55e" />&nbsp;Analyze commander performance and popularity
           </li>
-          <li class="flex items-center mb-3">
+          <li class="mb-3 flex items-center">
             <Check color="#22c55e" />&nbsp;Visualize your playgroup's meta with detailed charts
           </li>
         </ul>

@@ -78,13 +78,13 @@
   });
 </script>
 
-<div class="flex justify-between items-center mb-4">
+<div class="mb-4 flex items-center justify-between">
   <h1 class="text-2xl font-bold">Your Playgroups</h1>
   <Button href="/groups/new">Create New</Button>
 </div>
-<div class="mt-4 flex flex-wrap gap-4 justify-start">
+<div class="mt-4 flex flex-wrap justify-start gap-4">
   {#each playgroups as playgroup}
-    <a href="/groups/{playgroup.id}" class="w-[calc(100%)] md:w-[calc(50%-0.5rem)] no-underline">
+    <a href="/groups/{playgroup.id}" class="w-[calc(100%)] no-underline md:w-[calc(50%-0.5rem)]">
       <Card.Root class="w-full transition-colors hover:bg-muted/50">
         <div class="p-4">
           <div class="flex flex-col gap-1">
@@ -92,7 +92,7 @@
               <h3 class="text-md font-semibold">{playgroup.name}</h3>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                  <button on:click|stopPropagation class="hover:bg-muted rounded-full p-1">
+                  <button on:click|stopPropagation class="rounded-full p-1 hover:bg-muted">
                     <MoreHorizontal class="h-5 w-5" />
                   </button>
                 </DropdownMenu.Trigger>
@@ -118,12 +118,12 @@
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
             </div>
-            <div class="flex items-center justify-between w-full">
+            <div class="flex w-full items-center justify-between">
               <div class="flex items-center text-muted-foreground">
                 <div><Users size={16} /></div>
                 <span class="ml-1">{playgroup.pilots || 0}</span>
               </div>
-              <div class="flex items-center text-muted-foreground text-sm">
+              <div class="flex items-center text-sm text-muted-foreground">
                 <div><Calendar size={16} /></div>
                 <span class="ml-1"
                   >{playgroup.latestGameDate

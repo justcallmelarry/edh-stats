@@ -12,8 +12,6 @@
   import { X, User, Layers } from 'lucide-svelte';
   import IconComboBox from '$lib/components/IconComboBox.svelte';
   import { page } from '$app/state';
-  import Pilot from '$lib/components/Pilot.svelte';
-  import { playerRankingColumns } from '../../../pilot-columns';
 
   interface Player {
     pilot: string;
@@ -210,7 +208,7 @@
                     {#if players.length > 3}
                       <button
                         type="button"
-                        class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm"
+                        class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90"
                         onclick={() => removePlayer(i)}
                       >
                         <X size={12} />
@@ -230,7 +228,7 @@
         <Card.Title>Session Info</Card.Title>
       </Card.Header>
       <Card.Content class="px-2 md:px-6">
-        <div class="flex justify-between flex-wrap gap-2">
+        <div class="flex flex-wrap justify-between gap-2">
           <DatePicker bind:value={gameDate} />
           <Select.Root type="single" name="winner-select" bind:value={winner}>
             <Select.Trigger class="w-[280px]">

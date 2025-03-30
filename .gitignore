@@ -6,3 +6,4 @@ build/
 .env.local
 pb_data/
 bu/
+.vscode/

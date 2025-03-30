@@ -39,7 +39,7 @@
   });
 </script>
 
-<Card.Root class="mx-auto w-full mb-4">
+<Card.Root class="mx-auto mb-4 w-full">
   <Card.Content>
     <Table.Root>
       <Table.Body>

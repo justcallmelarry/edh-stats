@@ -33,7 +33,7 @@
     {#each navigationItems as item}
       <Button
         href={item.href}
-        class="w-full h-full flex items-center justify-center"
+        class="flex h-full w-full items-center justify-center"
         variant={page.data.tab === item.slug ? 'outline' : 'ghost'}
       >
         {item.label}

@@ -3,6 +3,6 @@ export const TABS = {
   ADD_GAME: 'add-game',
   GAMES: 'games',
   PILOTS: 'pilots',
-  DECKS: 'decks',
+  DECKS: 'decks'
   // Add more tabs here
 } as const;

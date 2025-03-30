@@ -101,7 +101,7 @@
         pilot,
         wins: stats.wins,
         games: stats.totalGames.size,
-        winRatio: stats.wins / stats.totalGames.size,
+        winRatio: stats.wins / stats.totalGames.size
         // @ts-ignore
       }))
       .sort((a, b) => {
@@ -117,7 +117,7 @@
         deck,
         wins: stats.wins,
         games: stats.totalGames.size,
-        winRatio: stats.wins / stats.totalGames.size,
+        winRatio: stats.wins / stats.totalGames.size
       }))
       .sort((a, b) => {
         if (b.wins !== a.wins) {
@@ -132,7 +132,7 @@
 {#if isLoading}
   <Spinner />
 {:else}
-  <div class="grid grid-cols-1 gap-2 w-full">
+  <div class="grid w-full grid-cols-1 gap-2">
     <Card.Root class="mx-auto w-full">
       <Card.Header>
         <Card.Title>Player Rankings</Card.Title>

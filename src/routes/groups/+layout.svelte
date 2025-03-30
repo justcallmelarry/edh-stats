@@ -28,7 +28,7 @@
 
 <HomeNavBar />
 <div class="container mx-auto p-2 md:p-4">
-  <div class="max-w-4xl mx-auto">
+  <div class="mx-auto max-w-4xl">
     {@render children?.()}
   </div>
 </div>

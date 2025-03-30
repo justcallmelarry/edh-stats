@@ -44,7 +44,7 @@
         console.log(record);
 
         await pb.collection('users').requestVerification(email);
-        toast.success("Verification email sent")
+        toast.success('Verification email sent');
         await goto('/groups');
       } catch (err) {
         error = /** @type {Error} */ (err as Error).message;
@@ -58,7 +58,7 @@
   }
 </script>
 
-<div class="h-screen flex items-center justify-center">
+<div class="flex h-screen items-center justify-center">
   <Card.Root class="mx-auto max-w-sm">
     <Card.Header>
       <Card.Title class="text-2xl">Register</Card.Title>
