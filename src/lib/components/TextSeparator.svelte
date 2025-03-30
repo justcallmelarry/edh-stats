@@ -2,7 +2,7 @@
   export let children: any;
 </script>
 
-<div class="separator text-sm pb-4"><slot>{children}</slot></div>
+<div class="separator pb-4 text-sm"><slot>{children}</slot></div>
 
 <style>
   .separator {

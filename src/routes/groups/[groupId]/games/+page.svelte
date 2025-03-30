@@ -126,7 +126,7 @@
 <div class="container mx-auto w-full px-0">
   {#each Object.entries(games) as [date, gameList]}
     <TextSeparator>{date}</TextSeparator>
-    <div class="grid grid-cols-1 gap-2 w-full lg:grid-cols-2">
+    <div class="grid w-full grid-cols-1 gap-2 lg:grid-cols-2">
       {#each gameList as game}
         <Card.Root class="mx-auto mb-4 w-full max-w-2xl">
           <Card.Header class="mb-2 flex flex-row items-center justify-between">
