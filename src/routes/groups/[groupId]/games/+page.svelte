@@ -119,7 +119,11 @@
   </Table.Cell>
   <Table.Cell>
     <div class="flex items-center justify-between gap-2">
-      <Deck text={player.deck.name} winner={player.isWinner} />
+      <Deck
+        text={player.deck.name}
+        winner={player.isWinner}
+        link={`/groups/${page.params.groupId}/decks/${player.deck.id}/edit`}
+      />
       {#if player.isWinner}
         <div><Trophy size={16} class="text-yellow-500" /></div>
       {/if}

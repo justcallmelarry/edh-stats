@@ -8,13 +8,15 @@
   import { Layers } from 'lucide-svelte';
   import { PieChart } from 'layerchart';
   import { goto } from '$app/navigation';
+  import Deck from '$lib/components/Deck.svelte';
 
-  interface Deck {
+  interface DeckType {
     id: string;
     name: string;
     colors: Array<string>;
     games: number;
     wins: number;
+    link: string;
   }
 
   interface GameRow {
@@ -35,7 +37,7 @@
   }
 
   let isLoading = $state(false);
-  let decks: Deck[] = $state([]);
+  let decks: DeckType[] = $state([]);
   let deckColors: Record<string, number> = $state({});
   let gameColors: Record<string, number> = $state({});
   let pilotName = $state('');
@@ -59,7 +61,8 @@
             name: deck.name,
             colors: deck.colors,
             games: 0,
-            wins: 0
+            wins: 0,
+            link: `/groups/${page.params.groupId}/decks/${deck.id}/edit`
           });
         }
         uniqueDecks.get(deck.id).games++;
@@ -199,12 +202,7 @@
         {#each decks as deck}
           <Table.Row>
             <Table.Cell>
-              <div class="flex justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <div><Layers size={16} /></div>
-                  {deck.name}
-                </div>
-              </div>
+              <Deck text={deck.name} link={deck.link} />
             </Table.Cell>
             <Table.Cell>
               {deck.games}

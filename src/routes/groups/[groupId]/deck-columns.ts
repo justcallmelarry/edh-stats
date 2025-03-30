@@ -2,7 +2,6 @@ import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/index.js';
 import Deck from '$lib/components/Deck.svelte';
-import { User } from 'lucide-svelte';
 
 export type DeckRanking = {
   deck: string;

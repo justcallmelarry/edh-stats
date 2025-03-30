@@ -7,14 +7,12 @@
   import { pb } from '$lib/pocketbase';
   import { goto } from '$app/navigation';
 
-  // Get the active tab from the page data
   let { children }: LayoutProps = $props();
 
   const navigationItems = [
     { slug: 'rankings', label: 'Rankings', href: `/groups/${page.params.groupId}` },
     { slug: 'games', label: 'Game History', href: `/groups/${page.params.groupId}/games` },
-    { slug: 'add-game', label: 'Add Game', href: `/groups/${page.params.groupId}/games/new` },
-    { slug: 'pilots', label: 'Pilots', href: `/groups/${page.params.groupId}/pilots` }
+    { slug: 'add-game', label: 'Add Game', href: `/groups/${page.params.groupId}/games/new` }
   ];
 
   onMount(async () => {
