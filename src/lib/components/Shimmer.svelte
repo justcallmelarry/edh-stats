@@ -11,13 +11,13 @@
     display: inline-block;
     color: white;
 
-    background: #000000 -webkit-gradient(
+    background: black -webkit-gradient(
         linear,
         100% 0,
         0 0,
-        from(#000000),
+        from(black),
         color-stop(0.5, #eab308),
-        to(#000000)
+        to(black)
       );
 
     -webkit-animation-duration: 4s;
@@ -33,6 +33,32 @@
     background-position: -4rem top; /*50px*/
     background-repeat: no-repeat;
     background-size: 4rem 100%; /*50px*/
+  }
+
+  :global(.dark) {
+    .shimmer {
+      background: white -webkit-gradient(
+          linear,
+          100% 0,
+          0 0,
+          from(white),
+          color-stop(0.5, #eab308),
+          to(white)
+        );
+      -webkit-animation-duration: 4s;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-name: shimmer;
+      -webkit-background-clip: text;
+      -webkit-background-size: 4rem 100%; /*50px*/
+      -webkit-text-fill-color: transparent;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-name: shimmer;
+      background-clip: text;
+      background-position: -4rem top; /*50px*/
+      background-repeat: no-repeat;
+      background-size: 4rem 100%; /*50px*/
+    }
   }
 
   @-webkit-keyframes shimmer {
