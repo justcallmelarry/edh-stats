@@ -14,7 +14,7 @@
   <Card.Root class="mx-auto max-w-sm">
     <Card.Header>
       <Card.Title class="text-2xl">Log Out</Card.Title>
-      <Card.Description>Enter your email below to login to your account</Card.Description>
+      <Card.Description>Click the button below to log out</Card.Description>
     </Card.Header>
     <Card.Content>
       <Button onclick={logout} class="w-full">Log Out</Button>

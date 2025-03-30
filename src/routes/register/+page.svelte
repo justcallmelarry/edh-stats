@@ -34,7 +34,7 @@
         password: password,
         passwordConfirm: passwordConfirm,
         email: email,
-        emailVisibility: true,
+        emailVisibility: false,
         verified: false
       };
 
