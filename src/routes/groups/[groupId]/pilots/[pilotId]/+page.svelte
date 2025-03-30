@@ -37,6 +37,7 @@
   let isLoading = $state(false);
   let decks: Deck[] = $state([]);
   let deckColors: Record<string, number> = $state({});
+  let gameColors: Record<string, number> = $state({});
   let pilotName = $state('');
 
   async function fetchData() {
@@ -65,6 +66,13 @@
         if (record.expand.game.winner == pilot.id) {
           uniqueDecks.get(deck.id).wins++;
         }
+
+        deck.colors.forEach((color) => {
+          if (!gameColors[color]) {
+            gameColors[color] = 0;
+          }
+          gameColors[color]++;
+        });
       });
 
       decks = Array.from(uniqueDecks.values()).sort((a, b) => a.name.localeCompare(b.name));
@@ -127,22 +135,49 @@
     <Card.Title>Pilot Info - {pilotName}</Card.Title>
   </Card.Header>
   <Card.Content>
-    <h4 class="scroll-m-20 text-sm font-semibold tracking-tight">Color Popularity</h4>
-    <div class="h-[160px] w-[50%] overflow-auto rounded border bg-secondary p-4">
-      <PieChart
-        data={Object.entries(deckColors).map(([name, value]) => ({
-          key: name,
-          name: colorInfo[name].name,
-          value: value,
-          color: colorInfo[name].hex
-        }))}
-        label="name"
-        innerRadius={-20}
-        cornerRadius={5}
-        padAngle={0.02}
-        renderContext="svg"
-        c="color"
-      />
+    <div class="flex flex-row">
+      <div class="w-[50%] overflow-auto">
+        <h4 class="flex scroll-m-20 flex-row text-sm font-semibold tracking-tight">
+          Color Popularity (Unique)
+        </h4>
+        <div class="h-[160px] rounded border bg-secondary p-4">
+          <PieChart
+            data={Object.entries(deckColors).map(([name, value]) => ({
+              key: name,
+              name: colorInfo[name].name,
+              value: value,
+              color: colorInfo[name].hex
+            }))}
+            label="name"
+            innerRadius={-20}
+            cornerRadius={5}
+            padAngle={0.02}
+            renderContext="svg"
+            c="color"
+          />
+        </div>
+      </div>
+      <div class="w-[50%] overflow-auto">
+        <h4 class="flex scroll-m-20 flex-row text-sm font-semibold tracking-tight">
+          Color Popularity (Cumulative)
+        </h4>
+        <div class="h-[160px] rounded border bg-secondary p-4">
+          <PieChart
+            data={Object.entries(gameColors).map(([name, value]) => ({
+              key: name,
+              name: colorInfo[name].name,
+              value: value,
+              color: colorInfo[name].hex
+            }))}
+            label="name"
+            innerRadius={-20}
+            cornerRadius={5}
+            padAngle={0.02}
+            renderContext="svg"
+            c="color"
+          />
+        </div>
+      </div>
     </div>
   </Card.Content>
 </Card.Root>
@@ -175,7 +210,7 @@
               {deck.games}
             </Table.Cell>
             <Table.Cell>
-              {deck.wins} ({((deck.wins / deck.games) * 100).toFixed(1)}%)
+              {deck.wins}&nbsp;({((deck.wins / deck.games) * 100).toFixed(1)}%)
             </Table.Cell>
             <Table.Cell>
               <div class="flex justify-center">
