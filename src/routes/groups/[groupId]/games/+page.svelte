@@ -9,23 +9,12 @@
   import Pilot from '$lib/components/Pilot.svelte';
   import Deck from '$lib/components/Deck.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
-  import Separator from '$lib/components/ui/separator/separator.svelte';
   import TextSeparator from '$lib/components/TextSeparator.svelte';
 
   interface Game {
     id: string;
     date: string;
     winner: string;
-  }
-  interface GameRow {
-    id: string;
-    pilot: string;
-    deck: string;
-    expand: {
-      pilot: { name: string };
-      deck: { name: string };
-      game: { id: string; date: string; winner: string };
-    };
   }
 
   interface GamePlayer {

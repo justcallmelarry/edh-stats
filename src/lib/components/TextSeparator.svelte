@@ -2,7 +2,7 @@
   export let children: any;
 </script>
 
-<div class="separator pb-4 text-sm"><slot>{children}</slot></div>
+<div class="separator pb-4 text-sm text-neutral-500"><slot>{children}</slot></div>
 
 <style>
   .separator {
@@ -15,7 +15,7 @@
   .separator::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid rgb(229, 231, 235);
   }
 
   .separator:not(:empty)::before {
