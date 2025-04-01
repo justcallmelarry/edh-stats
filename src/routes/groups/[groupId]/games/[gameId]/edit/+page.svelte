@@ -75,7 +75,7 @@
 
       // Populate game data
       gameDate = parseDate(game.date);
-      winner = game.expand?.winner.name || 'draw';
+      winner = game.expand?.winner?.name || 'draw';
 
       // Populate players
       players = gameRows.map((row) => ({
