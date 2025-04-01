@@ -8,6 +8,7 @@
   import * as Table from '$lib/components/ui/table/index.js';
   import { X, User, Layers } from 'lucide-svelte';
   import IconComboBox from '$lib/components/IconComboBox.svelte';
+  import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
 
   export let isEdit: boolean = false;
   export let players: Array<{ pilot: string; deck: string }> = [];
@@ -20,6 +21,10 @@
     gameDate: DateValue | undefined;
     winner: string;
   }) => Promise<void>;
+
+  export let onDelete: (() => void) | undefined = undefined;
+
+  export let isLoading: boolean = false;
 
   function addPlayer(): void {
     players = [...players, { pilot: '', deck: '' }];
@@ -79,6 +84,7 @@
                         type="button"
                         class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90"
                         on:click={() => removePlayer(i)}
+                        disabled={isLoading}
                       >
                         <X size={12} />
                       </button>
@@ -119,11 +125,37 @@
     </Card.Root>
 
     <div class="flex gap-4">
-      <Button variant="outline" onclick={addPlayer}>Add Player</Button>
+      <Button variant="outline" onclick={addPlayer} disabled={isLoading}>Add Player</Button>
       {#if isEdit === false}
-        <Button type="submit">Submit Game</Button>
+        <Button type="submit" disabled={isLoading}>Submit Game</Button>
       {:else}
-        <Button type="submit">Edit Game</Button>
+        <Button type="submit" disabled={isLoading}>Edit Game</Button>
+        {#if onDelete}
+          <AlertDialog.Root>
+            <AlertDialog.Trigger>
+              <Button
+                variant="destructive"
+                onclick={(e) => e.preventDefault()}
+                disabled={isLoading}
+              >
+                Delete Game
+              </Button>
+            </AlertDialog.Trigger>
+            <AlertDialog.Content>
+              <AlertDialog.Header>
+                <AlertDialog.Title>Are you sure you wish to delete this game?</AlertDialog.Title>
+                <AlertDialog.Description>
+                  This will permanently delete this game and remove the data from our servers. This
+                  action cannot be undone.
+                </AlertDialog.Description>
+              </AlertDialog.Header>
+              <AlertDialog.Footer>
+                <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+                <AlertDialog.Action onclick={() => onDelete?.()}>Confirm</AlertDialog.Action>
+              </AlertDialog.Footer>
+            </AlertDialog.Content>
+          </AlertDialog.Root>
+        {/if}
       {/if}
     </div>
   </form>

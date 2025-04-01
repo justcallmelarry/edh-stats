@@ -23,8 +23,11 @@
   let existingPilots: Array<{ id: string; name: string }> = $state([]);
   let existingDecks: Array<{ id: string; name: string }> = $state([]);
 
+  let isLoading = $state(false);
+
   async function fetchExistingData() {
     try {
+      isLoading = true;
       const pilots = await pb.collection('pilots').getFullList({
         filter: `playgroup = "${page.params.groupId}"`
       });
@@ -56,6 +59,8 @@
         .sort((a, b) => a.name.localeCompare(b.name));
     } catch (err) {
       console.error('Error fetching existing data:', err);
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -65,6 +70,7 @@
 
   async function handleSubmit(): Promise<void> {
     try {
+      isLoading = true;
       if (!gameDate) {
         toast.error('Please select a date');
         return;
@@ -140,6 +146,8 @@
       await fetchExistingData();
     } catch (err: unknown) {
       toast.error((err as Error).message);
+    } finally {
+      isLoading = false;
     }
   }
 </script>
@@ -151,4 +159,5 @@
   {existingPilots}
   {existingDecks}
   onSubmit={handleSubmit}
+  {isLoading}
 />

@@ -5,6 +5,7 @@
   import { toast } from 'svelte-sonner';
   import { page } from '$app/state';
   import GameForm from '$lib/components/GameForm.svelte';
+  import { goto } from '$app/navigation';
 
   interface Player {
     pilot: string;
@@ -22,9 +23,11 @@
 
   let existingPilots: Array<{ id: string; name: string }> = $state([]);
   let existingDecks: Array<{ id: string; name: string }> = $state([]);
+  let isLoading = $state(false);
 
   async function fetchExistingData() {
     try {
+      isLoading = true;
       const pilots = await pb.collection('pilots').getFullList({
         filter: `playgroup = "${page.params.groupId}"`
       });
@@ -56,11 +59,14 @@
         .sort((a, b) => a.name.localeCompare(b.name));
     } catch (err) {
       console.error('Error fetching existing data:', err);
+    } finally {
+      isLoading = false;
     }
   }
 
   async function fetchGameData() {
     try {
+      isLoading = true;
       const game = await pb.collection('games').getOne(page.params.gameId, { expand: 'winner' });
       const gameRows = await pb.collection('game_rows').getFullList({
         filter: `game = "${page.params.gameId}"`,
@@ -76,9 +82,39 @@
         pilot: row.expand?.pilot.name || '',
         deck: row.expand?.deck.name || ''
       }));
+      // Ensure at least 3 players
+      while (players.length < 3) {
+        players.push({ pilot: '', deck: '' });
+      }
     } catch (err) {
       console.error('Error fetching game data:', err);
       toast.error('Failed to load game data');
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  async function deleteGame() {
+    try {
+      isLoading = true;
+      // Delete all game rows associated with the game
+      const gameRows = await pb.collection('game_rows').getFullList({
+        filter: `game = "${page.params.gameId}"`
+      });
+      for (const row of gameRows) {
+        await pb.collection('game_rows').delete(row.id);
+      }
+
+      // Delete the game itself
+      await pb.collection('games').delete(page.params.gameId);
+
+      toast.success('Game deleted successfully');
+      goto(`/groups/${page.params.groupId}/games`);
+    } catch (err) {
+      console.error('Error deleting game:', err);
+      toast.error('Failed to delete game');
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -169,4 +205,6 @@
   {existingDecks}
   onSubmit={handleSubmit}
   isEdit={true}
+  onDelete={deleteGame}
+  {isLoading}
 />
