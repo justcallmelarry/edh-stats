@@ -50,6 +50,7 @@
         filter: `playgroup = "${page.params.groupId}" && pilot = "${page.params.pilotId}"`,
         expand: 'deck,game'
       });
+      console.log(result);
       const uniqueDecks = new Map();
       result.forEach((record) => {
         const deck = record.expand?.deck;
@@ -74,7 +75,9 @@
         });
       });
 
-      statRows = Array.from(uniqueDecks.values()).sort((a, b) => a.name.localeCompare(b.name));
+      statRows = Array.from(uniqueDecks.values()).sort((a, b) =>
+        a.deck.name.localeCompare(b.deck.name)
+      );
       statRows.forEach((row) => {
         row.deck.colors.forEach((color) => {
           if (!deckColors[color]) {
