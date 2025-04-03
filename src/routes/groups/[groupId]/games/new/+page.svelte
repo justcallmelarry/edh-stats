@@ -25,6 +25,21 @@
 
   let isLoading = $state(false);
 
+  async function getColors(name: string): Promise<string[]> {
+    try {
+      const response = await fetch(`https://api.scryfall.com/cards/named?exact=${name}`);
+      if (!response.ok) {
+        console.error('Error fetching card data:', response.statusText);
+        return [];
+      }
+      const cardData = await response.json();
+      return cardData.color_identity || ['C'];
+    } catch (error) {
+      console.error('Error fetching card data:', error);
+      return [];
+    }
+  }
+
   async function fetchExistingData() {
     try {
       isLoading = true;
@@ -110,9 +125,23 @@
           .catch(() => null);
 
         if (!deckRecord) {
+          let deckNames = player.deck.split(/\/+/).map((name) => name.trim());
+          let colorSet = new Set<string>();
+
+          for (let name of deckNames) {
+            let colors = await getColors(name);
+            colors.forEach((c) => colorSet.add(c));
+          }
+
+          if (colorSet.size > 1 && colorSet.has('C')) {
+            colorSet.delete('C');
+          }
+
+          let colors = Array.from(colorSet);
           deckRecord = await pb.collection('decks').create({
             name: player.deck,
-            playgroup: page.params.groupId
+            playgroup: page.params.groupId,
+            colors: colors
           });
         }
 

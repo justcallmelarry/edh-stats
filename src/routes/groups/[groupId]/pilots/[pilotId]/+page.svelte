@@ -84,6 +84,7 @@
           }
           deckColors[color]++;
         });
+        row.deck.colors = sortColors(row.deck.colors);
       });
     } catch (err) {
       console.error('Error fetching pilots:', err);
@@ -96,6 +97,11 @@
   onMount(() => {
     fetchData();
   });
+
+  function sortColors(colors: Array<string>) {
+    const colorOrder = ['W', 'U', 'B', 'R', 'G', 'C'];
+    return colors.sort((a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b));
+  }
 
   const colorInfo: Record<string, Record<string, string>> = {
     W: {
@@ -211,7 +217,7 @@
             <Table.Cell>
               <div class="flex justify-center">
                 {#each row.deck.colors as color}
-                  <div class="h-4 w-4 rounded-full}"><i class="ms ms-{color.toLowerCase()} ms-cost"></i></div>
+                  <i class="ms ms-{color.toLowerCase()} ms-cost"></i>
                 {/each}
               </div>
             </Table.Cell>
