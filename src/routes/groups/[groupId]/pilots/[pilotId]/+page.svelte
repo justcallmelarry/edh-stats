@@ -34,10 +34,17 @@
     };
   }
 
+  interface PieChartData {
+    key: string;
+    name: string;
+    value: number;
+    color: string;
+  }
+
   let isLoading = $state(false);
   let statRows: StatsRow[] = $state([]);
-  let deckColors: Record<string, number> = $state({});
-  let gameColors: Record<string, number> = $state({});
+  let deckColorData: PieChartData[] = $state([]);
+  let gameColorData: PieChartData[] = $state([]);
   let pilotName = $state('');
 
   async function fetchData() {
@@ -51,6 +58,9 @@
         expand: 'deck,game'
       });
       const uniqueDecks = new Map();
+      let deckColors: Record<string, number> = {};
+      let gameColors: Record<string, number> = {};
+
       result.forEach((record) => {
         const deck = record.expand?.deck;
         if (deck && !uniqueDecks.has(deck.id)) {
@@ -73,6 +83,14 @@
           gameColors[color]++;
         });
       });
+      gameColorData = Object.entries(gameColors)
+        .sort(([a], [b]) => Object.keys(colorInfo).indexOf(a) - Object.keys(colorInfo).indexOf(b))
+        .map(([key, value]) => ({
+          key,
+          name: colorInfo[key].name,
+          value,
+          color: colorInfo[key].hex
+        }));
 
       statRows = Array.from(uniqueDecks.values()).sort((a, b) =>
         a.deck.name.localeCompare(b.deck.name)
@@ -86,6 +104,14 @@
         });
         row.deck.colors = sortColors(row.deck.colors);
       });
+      deckColorData = Object.entries(deckColors)
+        .sort(([a], [b]) => Object.keys(colorInfo).indexOf(a) - Object.keys(colorInfo).indexOf(b))
+        .map(([key, value]) => ({
+          key,
+          name: colorInfo[key].name,
+          value,
+          color: colorInfo[key].hex
+        }));
     } catch (err) {
       console.error('Error fetching pilots:', err);
       goto('/404');
@@ -149,18 +175,18 @@
         </h4>
         <div class="h-[160px] p-4">
           <PieChart
-            data={Object.entries(deckColors).map(([name, value]) => ({
-              key: name,
-              name: colorInfo[name].name,
-              value: value,
-              color: colorInfo[name].hex
-            }))}
+            data={deckColorData}
             label="name"
             innerRadius={-20}
             cornerRadius={5}
             padAngle={0.02}
             renderContext="svg"
             c="color"
+            props={{
+              pie: {
+                sort: null
+              }
+            }}
           />
         </div>
       </div>
@@ -170,18 +196,18 @@
         </h4>
         <div class="h-[160px] p-4">
           <PieChart
-            data={Object.entries(gameColors).map(([name, value]) => ({
-              key: name,
-              name: colorInfo[name].name,
-              value: value,
-              color: colorInfo[name].hex
-            }))}
+            data={gameColorData}
             label="name"
             innerRadius={-20}
             cornerRadius={5}
             padAngle={0.02}
             renderContext="svg"
             c="color"
+            props={{
+              pie: {
+                sort: null
+              }
+            }}
           />
         </div>
       </div>
