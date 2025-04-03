@@ -10,15 +10,10 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import * as Select from '$lib/components/ui/select/index.js';
   import { toast } from 'svelte-sonner';
-
-  interface Deck {
-    id: string;
-    name: string;
-    colors: Array<string>;
-  }
+  import type { DeckType } from '$lib/types';
 
   let isLoading = $state(false);
-  let deck: Deck = $state({ id: '', name: '', colors: [] });
+  let deck: DeckType = $state({ id: '', name: '', colors: [] });
 
   async function fetchData() {
     isLoading = true;

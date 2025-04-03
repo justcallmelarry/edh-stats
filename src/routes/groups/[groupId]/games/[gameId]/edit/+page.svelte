@@ -6,6 +6,7 @@
   import { page } from '$app/state';
   import GameForm from '$lib/components/GameForm.svelte';
   import { goto } from '$app/navigation';
+  import { getColors } from '$lib/scryfall';
 
   interface Player {
     pilot: string;
@@ -165,9 +166,11 @@
           .catch(() => null);
 
         if (!deckRecord) {
+          let colors = await getColors(player.deck);
           deckRecord = await pb.collection('decks').create({
             name: player.deck,
-            playgroup: page.params.groupId
+            playgroup: page.params.groupId,
+            colors: colors
           });
         }
 

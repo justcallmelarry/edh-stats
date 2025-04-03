@@ -30,13 +30,11 @@
     };
   }
 
-
   interface DeckStats {
     deck: DeckType;
     wins: number;
     totalGames: Set<string>;
   }
-
 
   interface PilotStats {
     pilot: PilotType;
