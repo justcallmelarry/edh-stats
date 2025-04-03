@@ -2,9 +2,10 @@ import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import { renderSnippet, renderComponent } from '$lib/components/ui/data-table/index.js';
 import Pilot from '$lib/components/Pilot.svelte';
+import type { PilotType } from '$lib/types';
 
 export type PlayerRanking = {
-  pilot: string;
+  pilot: PilotType;
   games: number;
   wins: number;
   winRatio: number;
@@ -19,7 +20,7 @@ export const playerRankingColumns: ColumnDef<PlayerRanking>[] = [
       renderComponent(Pilot, {
         size: 16,
         link: row.getValue('link') as string,
-        text: row.getValue('pilot')
+        pilot: row.getValue('pilot')
       })
   },
   {

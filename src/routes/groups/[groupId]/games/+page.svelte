@@ -10,6 +10,7 @@
   import Deck from '$lib/components/Deck.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
   import TextSeparator from '$lib/components/TextSeparator.svelte';
+  import type { DeckType, PilotType } from '$lib/types';
 
   interface Game {
     id: string;
@@ -17,14 +18,9 @@
     winner: string;
   }
 
-  interface DBRecord {
-    id: string;
-    name: string;
-  }
-
   interface GamePlayer {
-    pilot: DBRecord;
-    deck: DBRecord;
+    pilot: PilotType;
+    deck: DeckType;
     isWinner: boolean;
   }
 
@@ -72,7 +68,8 @@
             },
             deck: {
               id: row.expand?.deck.id,
-              name: row.expand?.deck.name
+              name: row.expand?.deck.name,
+              colors: row.expand?.deck.colors
             },
             isWinner: row.pilot == record.winner
           });
@@ -112,7 +109,7 @@
     <div class="flex items-center">
       <Pilot
         link={`/groups/${page.params.groupId}/pilots/${player.pilot.id}`}
-        text={player.pilot.name}
+        pilot={player.pilot}
         winner={player.isWinner}
       />
     </div>
@@ -120,7 +117,7 @@
   <Table.Cell>
     <div class="flex items-center justify-between gap-2">
       <Deck
-        text={player.deck.name}
+        deck={player.deck}
         winner={player.isWinner}
         link={`/groups/${page.params.groupId}/decks/${player.deck.id}/edit`}
       />

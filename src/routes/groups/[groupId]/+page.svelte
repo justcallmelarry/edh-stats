@@ -7,6 +7,7 @@
   import { deckRankingColumns } from './deck-columns';
   import DataTable from '$lib/components/DataTable.svelte';
   import { page } from '$app/state';
+  import type { DeckType, PilotType } from '$lib/types';
 
   interface GameRow {
     pilot: string; // This is just the ID
@@ -19,6 +20,7 @@
       deck: {
         id: string;
         name: string;
+        colors: string[];
       };
       game: {
         id: string;
@@ -28,13 +30,22 @@
     };
   }
 
-  interface Stats {
-    id: string;
+
+  interface DeckStats {
+    deck: DeckType;
     wins: number;
     totalGames: Set<string>;
   }
+
+
+  interface PilotStats {
+    pilot: PilotType;
+    wins: number;
+    totalGames: Set<string>;
+  }
+
   interface PlayerRanking {
-    pilot: string;
+    pilot: PilotType;
     wins: number;
     games: number;
     winRatio: number;
@@ -42,7 +53,7 @@
   }
 
   interface DeckRanking {
-    deck: string;
+    deck: DeckType;
     wins: number;
     games: number;
     winRatio: number;
@@ -69,10 +80,10 @@
   });
 
   function calculateStats() {
-    const playerStats = gameRows.reduce((acc: Record<string, Stats>, row: GameRow) => {
+    const playerStats = gameRows.reduce((acc: Record<string, PilotStats>, row: GameRow) => {
       const pilotName = row.expand.pilot.name;
       if (!acc[pilotName]) {
-        acc[pilotName] = { id: row.expand.pilot.id, wins: 0, totalGames: new Set() };
+        acc[pilotName] = { pilot: row.expand.pilot, wins: 0, totalGames: new Set() };
       }
       acc[pilotName].totalGames.add(row.expand.game.id);
       if (row.expand.game.winner == row.pilot) {
@@ -81,10 +92,10 @@
       return acc;
     }, {});
 
-    const deckStats = gameRows.reduce((acc: Record<string, Stats>, row: GameRow) => {
+    const deckStats = gameRows.reduce((acc: Record<string, DeckStats>, row: GameRow) => {
       const deckName = row.expand.deck.name;
       if (!acc[deckName]) {
-        acc[deckName] = { id: row.expand.deck.id, wins: 0, totalGames: new Set() };
+        acc[deckName] = { deck: row.expand.deck, wins: 0, totalGames: new Set() };
       }
       acc[deckName].totalGames.add(row.expand.game.id);
       if (row.expand.game.winner == row.pilot) {
@@ -95,11 +106,11 @@
 
     playerRankings = Object.entries(playerStats)
       .map(([pilot, stats]) => ({
-        pilot,
+        pilot: stats.pilot,
         wins: stats.wins,
         games: stats.totalGames.size,
         winRatio: stats.wins / stats.totalGames.size,
-        link: `/groups/${page.params.groupId}/pilots/${stats.id}`
+        link: `/groups/${page.params.groupId}/pilots/${stats.pilot.id}`
         // @ts-ignore
       }))
       .sort((a, b) => {
@@ -112,11 +123,11 @@
 
     deckRankings = Object.entries(deckStats)
       .map(([deck, stats]) => ({
-        deck,
+        deck: stats.deck,
         wins: stats.wins,
         games: stats.totalGames.size,
         winRatio: stats.wins / stats.totalGames.size,
-        link: `/groups/${page.params.groupId}/decks/${stats.id}/edit`
+        link: `/groups/${page.params.groupId}/decks/${stats.deck.id}/edit`
       }))
       .sort((a, b) => {
         if (b.wins !== a.wins) {

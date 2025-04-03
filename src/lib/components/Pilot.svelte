@@ -2,7 +2,7 @@
   import { User } from 'lucide-svelte';
   import Shimmer from './Shimmer.svelte';
 
-  let { size = 16, winner = false, link = '#', text } = $props();
+  let { size = 16, winner = false, link = '#', pilot } = $props();
 </script>
 
 <div class="flex items-center gap-2">
@@ -12,11 +12,11 @@
   <a href={link}>
     {#if winner === true}
       <div class="font-semibold">
-        <Shimmer>{text}</Shimmer>
+        <Shimmer>{pilot.name}</Shimmer>
       </div>
     {:else}
       <div>
-        {text}
+        {pilot.name}
       </div>
     {/if}
   </a>

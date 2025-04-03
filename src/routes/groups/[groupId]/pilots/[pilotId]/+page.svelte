@@ -5,15 +5,13 @@
   import { page } from '$app/state';
   import { onMount } from 'svelte';
   import Spinner from '$lib/components/Spinner.svelte';
-  import { Layers } from 'lucide-svelte';
   import { PieChart } from 'layerchart';
   import { goto } from '$app/navigation';
   import Deck from '$lib/components/Deck.svelte';
+  import type { DeckType } from '$lib/types';
 
-  interface DeckType {
-    id: string;
-    name: string;
-    colors: Array<string>;
+  interface StatsRow {
+    deck: DeckType;
     games: number;
     wins: number;
     link: string;
@@ -37,7 +35,7 @@
   }
 
   let isLoading = $state(false);
-  let decks: DeckType[] = $state([]);
+  let statRows: StatsRow[] = $state([]);
   let deckColors: Record<string, number> = $state({});
   let gameColors: Record<string, number> = $state({});
   let pilotName = $state('');
@@ -57,9 +55,7 @@
         const deck = record.expand?.deck;
         if (deck && !uniqueDecks.has(deck.id)) {
           uniqueDecks.set(deck.id, {
-            id: deck.id,
-            name: deck.name,
-            colors: deck.colors,
+            deck: deck,
             games: 0,
             wins: 0,
             link: `/groups/${page.params.groupId}/decks/${deck.id}/edit`
@@ -78,9 +74,9 @@
         });
       });
 
-      decks = Array.from(uniqueDecks.values()).sort((a, b) => a.name.localeCompare(b.name));
-      decks.forEach((deck) => {
-        deck.colors.forEach((color) => {
+      statRows = Array.from(uniqueDecks.values()).sort((a, b) => a.name.localeCompare(b.name));
+      statRows.forEach((row) => {
+        row.deck.colors.forEach((color) => {
           if (!deckColors[color]) {
             deckColors[color] = 0;
           }
@@ -199,20 +195,20 @@
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {#each decks as deck}
+        {#each statRows as row}
           <Table.Row>
             <Table.Cell>
-              <Deck text={deck.name} link={deck.link} />
+              <Deck deck={row.deck} link={row.link} />
             </Table.Cell>
             <Table.Cell>
-              {deck.games}
+              {row.games}
             </Table.Cell>
             <Table.Cell>
-              {deck.wins}&nbsp;({((deck.wins / deck.games) * 100).toFixed(1)}%)
+              {row.wins}&nbsp;({((row.wins / row.games) * 100).toFixed(1)}%)
             </Table.Cell>
             <Table.Cell>
               <div class="flex justify-center">
-                {#each deck.colors as color}
+                {#each row.deck.colors as color}
                   <div
                     class="h-4 w-4 rounded-full bg-gradient-to-tl from-secondary dark:from-slate-400 {colorInfo[
                       color
