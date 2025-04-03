@@ -2,27 +2,11 @@
   export let children: any;
 </script>
 
-<div class="separator pb-4 text-sm text-neutral-500"><slot>{children}</slot></div>
-
-<style>
-  .separator {
-    display: flex;
-    align-items: center;
-    text-align: center;
-  }
-
-  .separator::before,
-  .separator::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid rgb(229, 231, 235);
-  }
-
-  .separator:not(:empty)::before {
-    margin-right: 0.25em;
-  }
-
-  .separator:not(:empty)::after {
-    margin-left: 0.25em;
-  }
-</style>
+<div class="relative py-4">
+  <div class="absolute inset-0 flex items-center">
+    <div class="w-full border-b border-gray-300 dark:border-secondary"></div>
+  </div>
+  <div class="relative flex justify-center">
+    <span class="bg-white dark:bg-black px-4 text-sm text-gray-500"><slot>{children}</slot></span>
+  </div>
+</div>
