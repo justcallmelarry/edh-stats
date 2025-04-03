@@ -100,32 +100,32 @@
 
   const colorInfo: Record<string, Record<string, string>> = {
     W: {
-      bg: 'bg-amber-300',
+      cost: 'ms ms-w ms-cost',
       hex: '#fcd34d',
       name: 'White'
     },
     U: {
-      bg: 'bg-blue-500',
+      cost: 'ms ms-u ms-cost',
       hex: '#3b82f6',
       name: 'Blue'
     },
     B: {
-      bg: 'bg-neutral-950',
-      hex: '#0a0a0a',
+      cost: 'ms ms-b ms-cost',
+      hex: '#404040',
       name: 'Black'
     },
     R: {
-      bg: 'bg-red-600',
+      cost: 'ms ms-r ms-cost',
       hex: '#dc2626',
       name: 'Red'
     },
     G: {
-      bg: 'bg-green-600',
+      cost: 'ms ms-g ms-cost',
       hex: '#16a34a',
       name: 'Green'
     },
     C: {
-      bg: 'bg-slate-400',
+      cost: 'ms ms-c ms-cost',
       hex: '#94a3b8',
       name: 'Colorless'
     }
@@ -142,7 +142,7 @@
         <h4 class="flex scroll-m-20 flex-row text-sm font-semibold tracking-tight">
           Color Popularity (Unique)
         </h4>
-        <div class="h-[160px] rounded border bg-secondary p-4">
+        <div class="h-[160px] p-4">
           <PieChart
             data={Object.entries(deckColors).map(([name, value]) => ({
               key: name,
@@ -163,7 +163,7 @@
         <h4 class="flex scroll-m-20 flex-row text-sm font-semibold tracking-tight">
           Color Popularity (Cumulative)
         </h4>
-        <div class="h-[160px] rounded border bg-secondary p-4">
+        <div class="h-[160px] p-4">
           <PieChart
             data={Object.entries(gameColors).map(([name, value]) => ({
               key: name,
@@ -212,11 +212,7 @@
             <Table.Cell>
               <div class="flex justify-center">
                 {#each row.deck.colors as color}
-                  <div
-                    class="h-4 w-4 rounded-full bg-gradient-to-tl from-secondary dark:from-slate-400 {colorInfo[
-                      color
-                    ].bg}"
-                  ></div>
+                  <div class="h-4 w-4 rounded-full}"><i class="ms ms-{color.toLowerCase()} ms-cost"></i></div>
                 {/each}
               </div>
             </Table.Cell>
