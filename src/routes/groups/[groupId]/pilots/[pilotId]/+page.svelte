@@ -50,7 +50,6 @@
         filter: `playgroup = "${page.params.groupId}" && pilot = "${page.params.pilotId}"`,
         expand: 'deck,game'
       });
-      console.log(result);
       const uniqueDecks = new Map();
       result.forEach((record) => {
         const deck = record.expand?.deck;
