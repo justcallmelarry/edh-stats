@@ -3,7 +3,6 @@
   import { pb } from '$lib/pocketbase';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { toast } from 'svelte-sonner';
 
   let { children } = $props();
 
@@ -20,7 +19,6 @@
     }
 
     if (!pb.authStore.record?.verified) {
-      toast.error('Your email is not yet verified');
       await goto('/sign-in');
     }
   });
