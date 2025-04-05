@@ -9,6 +9,7 @@
   import { goto } from '$app/navigation';
   import Deck from '$lib/components/Deck.svelte';
   import type { DeckType } from '$lib/types';
+  import { sortColors } from '$lib/mtg';
 
   interface StatsRow {
     deck: DeckType;
@@ -123,11 +124,6 @@
   onMount(() => {
     fetchData();
   });
-
-  function sortColors(colors: Array<string>) {
-    const colorOrder = ['W', 'U', 'B', 'R', 'G', 'C'];
-    return colors.sort((a, b) => colorOrder.indexOf(a) - colorOrder.indexOf(b));
-  }
 
   const colorInfo: Record<string, Record<string, string>> = {
     W: {
