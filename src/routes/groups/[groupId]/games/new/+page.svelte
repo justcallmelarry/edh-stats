@@ -93,30 +93,32 @@
       // Process each player's data
       for await (let player of players) {
         // Check if pilot exists by name, create if not
+        const pilotName = player.pilot.trim();
         let pilotRecord = await pb
           .collection('pilots')
-          .getFirstListItem(`name = "${player.pilot}" && playgroup = "${page.params.groupId}"`)
+          .getFirstListItem(`name = "${pilotName}" && playgroup = "${page.params.groupId}"`)
           .catch(() => null);
 
         if (!pilotRecord) {
           pilotRecord = await pb.collection('pilots').create({
-            name: player.pilot,
+            name: pilotName,
             playgroup: page.params.groupId
           });
         }
 
         // Check if deck exists by name, create if not
+        const deckName = player.deck.trim();
         let deckRecord = await pb
           .collection('decks')
-          .getFirstListItem(`name = "${player.deck}" && playgroup = "${page.params.groupId}"`)
+          .getFirstListItem(`name = "${deckName}" && playgroup = "${page.params.groupId}"`)
           .catch(() => null);
 
         if (!deckRecord) {
-          let colors = await getColors(player.deck);
+          let colors = await getColors(deckName);
           colors = sortColors(colors);
 
           deckRecord = await pb.collection('decks').create({
-            name: player.deck,
+            name: deckName,
             playgroup: page.params.groupId,
             colors: colors
           });
@@ -130,7 +132,7 @@
         };
         await pb.collection('game_rows').create(gameRowData);
 
-        if (winner === player.pilot) {
+        if (winner.trim() === pilotName) {
           winnerID = pilotRecord?.id || '';
         }
       }
