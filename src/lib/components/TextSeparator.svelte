@@ -7,6 +7,6 @@
     <div class="w-full border-b border-gray-300 dark:border-secondary"></div>
   </div>
   <div class="relative flex justify-center">
-    <span class="bg-white px-4 text-sm text-gray-500 dark:bg-black"><slot>{children}</slot></span>
+    <span class="bg-background px-4 text-sm text-gray-500"><slot>{children}</slot></span>
   </div>
 </div>
